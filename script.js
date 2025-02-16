@@ -1,18 +1,8 @@
 
-// Define logo URLs - you'll need to add the actual logo files to the logos directory
-const logoUrls = {
-  "ChatGPT": "logos/chatgpt.png",
-  "Claude": "logos/claude.png",
-  "Century": "logos/century.png",
-  "Third Space Learning": "logos/tsl.png",
-  "Gradescope": "logos/gradescope.png",
-  "Turnitin": "logos/turnitin.png"
-};
-
 const data = {
   nodes: [
     // LLMs and Chatbots
-    { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise", x: Math.random() * width, y: Math.random() * height },
+    { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Claude", group: "LLM", description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     
     // Learning Platforms
@@ -43,12 +33,6 @@ const svg = d3.select("#graph-container")
 // Calculate the optimal distance based on viewport size
 const optimalDistance = Math.min(width, height) / 4;
 
-// Initialize nodes at random positions
-data.nodes.forEach(node => {
-  node.x = Math.random() * width;
-  node.y = Math.random() * height;
-});
-
 const simulation = d3.forceSimulation(data.nodes)
   .force("link", d3.forceLink(data.links)
     .id(d => d.id)
@@ -70,29 +54,10 @@ const nodes = svg.append("g")
   .data(data.nodes)
   .join("g");
 
-// Create node container
-const nodeGroups = nodes.append("g")
-  .attr("class", "node")
-  .style("opacity", 0) // Start invisible for animation
-  .transition()
-  .duration(1500)
-  .style("opacity", 1); // Fade in
-
-// Add circular background
-nodeGroups.append("circle")
+nodes.append("circle")
   .attr("r", 30)
   .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : "#9999ff");
 
-// Add logo images
-nodeGroups.append("image")
-  .attr("xlink:href", d => logoUrls[d.id])
-  .attr("x", -25)
-  .attr("y", -25)
-  .attr("width", 50)
-  .attr("height", 50)
-  .attr("clip-path", "circle(25px at center)");
-
-// Add text label
 nodes.append("text")
   .text(d => d.id)
   .attr("text-anchor", "middle")
