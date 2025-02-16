@@ -14,9 +14,11 @@ const data = {
     { id: "Turnitin", group: "Assessment", description: "AI-powered plagiarism detection", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Enterprise" }
   ],
   links: [
-    { source: "ChatGPT", target: "Claude", value: 1 },
-    { source: "Century", target: "Third Space Learning", value: 1 },
-    { source: "Gradescope", target: "Turnitin", value: 1 }
+    { source: "ChatGPT", target: "Claude", value: 0.8 },
+    { source: "Century", target: "Third Space Learning", value: 0.6 },
+    { source: "Gradescope", target: "Turnitin", value: 0.9 },
+    { source: "ChatGPT", target: "Century", value: 0.4 },
+    { source: "Claude", target: "Turnitin", value: 0.5 }
   ]
 };
 
@@ -28,17 +30,24 @@ const svg = d3.select("#graph-container")
   .attr("width", width)
   .attr("height", height);
 
+// Calculate the optimal distance based on viewport size
+const optimalDistance = Math.min(width, height) / 4;
+
 const simulation = d3.forceSimulation(data.nodes)
-  .force("link", d3.forceLink(data.links).id(d => d.id))
-  .force("charge", d3.forceManyBody().strength(-300))
-  .force("center", d3.forceCenter(width / 2, height / 2));
+  .force("link", d3.forceLink(data.links)
+    .id(d => d.id)
+    .distance(d => optimalDistance * (2 - d.value))) // Stronger connections are closer
+  .force("charge", d3.forceManyBody().strength(-optimalDistance * 2))
+  .force("center", d3.forceCenter(width / 2, height / 2))
+  .force("collision", d3.forceCollide().radius(40));
 
 const links = svg.append("g")
   .selectAll("line")
   .data(data.links)
   .join("line")
   .style("stroke", "#999")
-  .style("stroke-width", 2);
+  .style("stroke-width", d => d.value * 5) // Line thickness based on connection strength
+  .style("stroke-opacity", d => d.value);
 
 const nodes = svg.append("g")
   .selectAll("g")
@@ -102,7 +111,15 @@ simulation.on("tick", () => {
 window.addEventListener("resize", () => {
   const width = window.innerWidth;
   const height = window.innerHeight;
+  const optimalDistance = Math.min(width, height) / 4;
+  
   svg.attr("width", width).attr("height", height);
-  simulation.force("center", d3.forceCenter(width / 2, height / 2));
+  simulation
+    .force("link", d3.forceLink(data.links)
+      .id(d => d.id)
+      .distance(d => optimalDistance * (2 - d.value)))
+    .force("charge", d3.forceManyBody().strength(-optimalDistance * 2))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collision", d3.forceCollide().radius(40));
   simulation.alpha(1).restart();
 });
