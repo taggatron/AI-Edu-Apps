@@ -69,11 +69,38 @@ nodes.append("circle")
   .attr("r", 30)
   .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : "#9999ff");
 
+// Function to randomly assign certification status
+function getRandomStatus() {
+  const statuses = ['✓', '✗', '?'];
+  return statuses[Math.floor(Math.random() * statuses.length)];
+}
+
+// Add status to each node
+data.nodes.forEach(node => {
+  node.certStatus = getRandomStatus();
+});
+
+// Add purple brackets and status indicator
 nodes.append("text")
-  .text(d => d.id)
   .attr("text-anchor", "middle")
   .attr("dy", ".35em")
-  .style("font-size", "12px");
+  .style("font-size", "12px")
+  .each(function(d) {
+    const text = d3.select(this);
+    text.append("tspan")
+      .style("fill", "purple")
+      .text("[");
+    text.append("tspan")
+      .text(d.id);
+    text.append("tspan")
+      .style("fill", "purple")
+      .text("] ");
+    text.append("tspan")
+      .style("fill", d => d.certStatus === '✓' ? 'green' : 
+                         d.certStatus === '✗' ? 'red' : 
+                         'orange')
+      .text(d => d.certStatus);
+  });
 
 const tooltip = d3.select("#tooltip");
 
