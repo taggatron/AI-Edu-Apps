@@ -8,6 +8,9 @@ const data = {
     { id: "DeepSeek", group: "LLM", description: "Advanced language model for coding and analysis", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "SUNO", group: "LLM", description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Stable Diffusion", group: "LLM", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Notion", group: "Platform", description: "AI-enhanced workspace and note-taking platform", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Perplexity AI", group: "LLM", description: "AI-powered search and research assistant", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Speechify", group: "LLM", description: "AI text-to-speech and document reader", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
 
     // Learning Platforms
     { id: "Teachermatic", group: "Platform", description: "AI-powered teaching assistant and lesson planning tool", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
@@ -31,7 +34,12 @@ const data = {
     { source: "DeepSeek", target: "ChatGPT", value: 0.7 },
     { source: "DeepSeek", target: "Claude", value: 0.6 },
     { source: "Teachermatic", target: "ChatGPT", value: 0.7 },
-    { source: "Teachermatic", target: "Century", value: 0.5 }
+    { source: "Teachermatic", target: "Century", value: 0.5 },
+    { source: "Notion", target: "ChatGPT", value: 0.8 },
+    { source: "Perplexity AI", target: "ChatGPT", value: 0.9 },
+    { source: "Perplexity AI", target: "Claude", value: 0.7 },
+    { source: "Speechify", target: "ChatGPT", value: 0.6 },
+    { source: "Notion", target: "Speechify", value: 0.5 }
   ]
 };
 
