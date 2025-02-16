@@ -1,4 +1,3 @@
-
 const data = {
   nodes: [
     // LLMs and Chatbots
@@ -9,11 +8,11 @@ const data = {
     { id: "DeepSeek", group: "LLM", description: "Advanced language model for coding and analysis", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "SUNO", group: "LLM", description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Stable Diffusion", group: "LLM", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    
+
     // Learning Platforms
     { id: "Century", group: "Platform", description: "Adaptive learning platform using AI", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Advanced" },
     { id: "Third Space Learning", group: "Platform", description: "AI-powered math tutoring platform", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
-    
+
     // Assessment Tools
     { id: "Gradescope", group: "Assessment", description: "AI-assisted grading and feedback", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Turnitin", group: "Assessment", description: "AI-powered plagiarism detection", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Enterprise" }
@@ -50,7 +49,7 @@ const simulation = d3.forceSimulation(data.nodes)
     .distance(d => optimalDistance * (2 - d.value))) // Stronger connections are closer
   .force("charge", d3.forceManyBody().strength(-optimalDistance * 2))
   .force("center", d3.forceCenter(width / 2, height / 2))
-  .force("collision", d3.forceCollide().radius(40))
+  .force("collision", d3.forceCollide().radius(d => 35)) // Updated collision radius
   .force("boundary", () => {
     const padding = 50;
     return function(alpha) {
@@ -77,7 +76,7 @@ const nodes = svg.append("g")
   .join("g");
 
 nodes.append("circle")
-  .attr("r", 30)
+  .attr("r", 35) //Increased node radius
   .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : "#9999ff");
 
 // Function to randomly assign certification status
@@ -160,8 +159,8 @@ simulation.on("tick", () => {
   simulation.nodes().forEach(node => {
     node.x += jiggle();
     node.y += jiggle();
-    node.x = Math.max(30, Math.min(width - 30, node.x));
-    node.y = Math.max(30, Math.min(height - 30, node.y));
+    node.x = Math.max(35, Math.min(width - 35, node.x));
+    node.y = Math.max(35, Math.min(height - 35, node.y));
   });
 
   links
@@ -184,7 +183,7 @@ window.addEventListener("resize", () => {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const optimalDistance = Math.min(width, height) / 4;
-  
+
   svg.attr("width", width).attr("height", height);
   simulation
     .force("link", d3.forceLink(data.links)
@@ -192,6 +191,6 @@ window.addEventListener("resize", () => {
       .distance(d => optimalDistance * (2 - d.value)))
     .force("charge", d3.forceManyBody().strength(-optimalDistance * 2))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius(40));
+    .force("collision", d3.forceCollide().radius(35));
   simulation.alpha(1).restart();
 });
