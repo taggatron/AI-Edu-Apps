@@ -128,20 +128,25 @@ nodes.each(function(d) {
     .each(function() {
       const text = d3.select(this);
       const words = d.id.split(' ');
+      const firstY = -((words.length - 1) * 1.2) / 2 + "em";
+      
       text.append("tspan")
         .style("fill", "purple")
-        .attr("x", 0)
+        .attr("x", -5)
+        .attr("dy", firstY)
         .text("[");
+      
       words.forEach((word, i) => {
         text.append("tspan")
           .attr("x", 0)
           .attr("dy", i === 0 ? "0" : "1.2em")
           .text(word);
       });
+      
       text.append("tspan")
-        .attr("x", 0)
-        .attr("dy", "1.2em")
         .style("fill", "purple")
+        .attr("x", 5)
+        .attr("dy", "0")
         .text("]");
       text.append("tspan")
         .style("fill", d => d.certStatus === '✓' ? 'green' : 
