@@ -50,7 +50,18 @@ const simulation = d3.forceSimulation(data.nodes)
     .distance(d => optimalDistance * (2 - d.value))) // Stronger connections are closer
   .force("charge", d3.forceManyBody().strength(-optimalDistance * 2))
   .force("center", d3.forceCenter(width / 2, height / 2))
-  .force("collision", d3.forceCollide().radius(40));
+  .force("collision", d3.forceCollide().radius(40))
+  .force("boundary", () => {
+    const padding = 50;
+    return function(alpha) {
+      data.nodes.forEach(node => {
+        if (node.x < padding) node.vx += (padding - node.x) * alpha * 0.5;
+        if (node.x > width - padding) node.vx -= (node.x - (width - padding)) * alpha * 0.5;
+        if (node.y < padding) node.vy += (padding - node.y) * alpha * 0.5;
+        if (node.y > height - padding) node.vy -= (node.y - (height - padding)) * alpha * 0.5;
+      });
+    };
+  });
 
 const links = svg.append("g")
   .selectAll("line")
