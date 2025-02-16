@@ -127,10 +127,11 @@ nodes.each(function(d) {
     .style("font-size", "12px")
     .each(function() {
       const text = d3.select(this);
+      const words = d.id.split(' ');
       text.append("tspan")
         .style("fill", "purple")
+        .attr("x", 0)
         .text("[");
-      const words = d.id.split(' ');
       words.forEach((word, i) => {
         text.append("tspan")
           .attr("x", 0)
@@ -138,8 +139,10 @@ nodes.each(function(d) {
           .text(word);
       });
       text.append("tspan")
+        .attr("x", 0)
+        .attr("dy", "1.2em")
         .style("fill", "purple")
-        .text("] ");
+        .text("]");
       text.append("tspan")
         .style("fill", d => d.certStatus === '✓' ? 'green' : 
                            d.certStatus === '✗' ? 'red' : 
