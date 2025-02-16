@@ -1,6 +1,9 @@
 const data = {
   nodes: [
     // LLMs and Chatbots
+    { id: "DALL-E", group: "LLM", description: "AI image generation by OpenAI", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Runway ML", group: "Platform", description: "AI-powered creative tools for video and image editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Canva", group: "Platform", description: "Design platform with AI-powered features", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Claude", group: "LLM", description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Anthropic", group: "Platform", description: "AI research company and creator of Claude", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
@@ -22,6 +25,12 @@ const data = {
     { id: "Turnitin", group: "Assessment", description: "AI-powered plagiarism detection", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Enterprise" }
   ],
   links: [
+    { source: "DALL-E", target: "Stable Diffusion", value: 0.9 },
+    { source: "DALL-E", target: "Midjourney", value: 0.8 },
+    { source: "Runway ML", target: "DALL-E", value: 0.7 },
+    { source: "Runway ML", target: "Stable Diffusion", value: 0.8 },
+    { source: "Canva", target: "DALL-E", value: 0.6 },
+    { source: "Canva", target: "Stable Diffusion", value: 0.5 },
     { source: "ChatGPT", target: "Claude", value: 0.8 },
     { source: "Century", target: "Third Space Learning", value: 0.6 },
     { source: "Gradescope", target: "Turnitin", value: 0.9 },
@@ -137,6 +146,9 @@ nodes.each(function(d) {
   g.append("image")
     .attr("xlink:href", d => {
       const logos = {
+        'DALL-E': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
+        'Runway ML': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/runkit.svg',
+        'Canva': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/canva.svg',
         'ChatGPT': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
         'Claude': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/anthropic.svg',
         'Anthropic': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/anthropic.svg',
