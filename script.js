@@ -107,27 +107,59 @@ data.nodes.forEach(node => {
   node.certStatus = getRandomStatus();
 });
 
-// Add purple brackets and status indicator
-nodes.append("text")
-  .attr("text-anchor", "middle")
-  .attr("dy", ".35em")
-  .style("font-size", "12px")
-  .each(function(d) {
-    const text = d3.select(this);
-    text.append("tspan")
-      .style("fill", "purple")
-      .text("[");
-    text.append("tspan")
-      .text(d.id);
-    text.append("tspan")
-      .style("fill", "purple")
-      .text("] ");
-    text.append("tspan")
-      .style("fill", d => d.certStatus === '✓' ? 'green' : 
-                         d.certStatus === '✗' ? 'red' : 
-                         'orange')
-      .text(d => d.certStatus);
-  });
+// Add images and text to nodes
+nodes.each(function(d) {
+  const g = d3.select(this);
+  
+  // Add text first
+  g.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "-5")
+    .style("font-size", "12px")
+    .each(function() {
+      const text = d3.select(this);
+      text.append("tspan")
+        .style("fill", "purple")
+        .text("[");
+      text.append("tspan")
+        .text(d.id);
+      text.append("tspan")
+        .style("fill", "purple")
+        .text("] ");
+      text.append("tspan")
+        .style("fill", d => d.certStatus === '✓' ? 'green' : 
+                           d.certStatus === '✗' ? 'red' : 
+                           'orange')
+        .text(d => d.certStatus);
+    });
+
+  // Add image below text
+  g.append("image")
+    .attr("xlink:href", d => {
+      const logos = {
+        'ChatGPT': 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
+        'Claude': 'https://uploads-ssl.webflow.com/62a8755621a5fd7f42d13ba4/62af2fb535561e9e44171c65_Anthropic-Symbol-Full.svg',
+        'Anthropic': 'https://uploads-ssl.webflow.com/62a8755621a5fd7f42d13ba4/62af2fb535561e9e44171c65_Anthropic-Symbol-Full.svg',
+        'Midjourney': 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png',
+        'DeepSeek': 'https://www.deepseek.com/_next/static/media/logo.8cd13c4f.svg',
+        'SUNO': 'https://suno.ai/logo.svg',
+        'Stable Diffusion': 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Stable_Diffusion_logo.png',
+        'Notion': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png',
+        'Perplexity AI': 'https://www.perplexity.ai/favicon.ico',
+        'Speechify': 'https://assets.speechify.com/assets/icons/speechify-logo-5114b3d7be7c3f99ed94c4fb0b4b98a1912c0cca94ba2c02c29fb10c5b21bed8.png',
+        'Century': 'https://century.tech/wp-content/themes/century/assets/images/century-logo.svg',
+        'Third Space Learning': 'https://thirdspacelearning.com/wp-content/themes/thirdspacelearning/dist/images/logo.svg',
+        'Gradescope': 'https://www.gradescope.com/favicon.ico',
+        'Turnitin': 'https://www.turnitin.com/static/media/turnitin-logo.svg',
+        'Teachermatic': 'https://teachermatic.co.uk/logo.png'
+      }[d.id] || '';
+    })
+    .attr("x", -15)
+    .attr("y", 5)
+    .attr("width", 30)
+    .attr("height", 30)
+    .style("opacity", 0.8);
+});
 
 const tooltip = d3.select("#tooltip");
 
