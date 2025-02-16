@@ -102,7 +102,7 @@ const nodes = svg.append("g")
   .join("g");
 
 nodes.append("circle")
-  .attr("r", 45) // Further increased node radius for multi-line text
+  .attr("r", 35) //Increased node radius
   .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : "#9999ff");
 
 // Function to randomly assign certification status
@@ -127,27 +127,14 @@ nodes.each(function(d) {
     .style("font-size", "12px")
     .each(function() {
       const text = d3.select(this);
-      const words = d.id.split(' ');
-      const firstY = -((words.length - 1) * 1.2) / 2 + "em";
-      
       text.append("tspan")
         .style("fill", "purple")
-        .attr("x", -5)
-        .attr("dy", firstY)
         .text("[");
-      
-      words.forEach((word, i) => {
-        text.append("tspan")
-          .attr("x", 0)
-          .attr("dy", i === 0 ? "0" : "1.2em")
-          .text(word);
-      });
-      
+      text.append("tspan")
+        .text(d.id);
       text.append("tspan")
         .style("fill", "purple")
-        .attr("x", 5)
-        .attr("dy", "0")
-        .text("]");
+        .text("] ");
       text.append("tspan")
         .style("fill", d => d.certStatus === '✓' ? 'green' : 
                            d.certStatus === '✗' ? 'red' : 
