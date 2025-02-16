@@ -41,7 +41,13 @@ const height = window.innerHeight;
 const svg = d3.select("#graph-container")
   .append("svg")
   .attr("width", width)
-  .attr("height", height);
+  .attr("height", height)
+  .on("click", (event) => {
+    // Only close if clicking directly on SVG (not on nodes)
+    if (event.target.tagName === 'svg') {
+      tooltip.style("opacity", 0);
+    }
+  });
 
 // Calculate the optimal distance based on viewport size
 const optimalDistance = Math.min(width, height) / 4;
