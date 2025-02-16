@@ -1,12 +1,12 @@
 
-// Define logo URLs using direct image links
+// Define logo URLs - you'll need to add the actual logo files to the logos directory
 const logoUrls = {
-  "ChatGPT": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
-  "Claude": "https://www.anthropic.com/images/logo.svg",
-  "Century": "https://century.tech/wp-content/uploads/2021/06/Century-Logo.png",
-  "Third Space Learning": "https://www.thirdspacelearning.com/wp-content/uploads/2021/01/TSL-Logo.png",
-  "Gradescope": "https://www.gradescope.com/assets/gradescope-logo-b4b7119579478ca0578657f84e1a61f6e3916ff821a8267f265a087a5ff4c2f4.svg",
-  "Turnitin": "https://www.turnitin.com/img/logo/turnitin-logo.svg"
+  "ChatGPT": "logos/chatgpt.png",
+  "Claude": "logos/claude.png",
+  "Century": "logos/century.png",
+  "Third Space Learning": "logos/tsl.png",
+  "Gradescope": "logos/gradescope.png",
+  "Turnitin": "logos/turnitin.png"
 };
 
 const data = {
