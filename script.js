@@ -4,6 +4,8 @@ const data = {
     // LLMs and Chatbots
     { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Claude", group: "LLM", description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "SUNO", group: "LLM", description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Stable Diffusion", group: "LLM", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     
     // Learning Platforms
     { id: "Century", group: "Platform", description: "Adaptive learning platform using AI", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Advanced" },
@@ -18,7 +20,9 @@ const data = {
     { source: "Century", target: "Third Space Learning", value: 0.6 },
     { source: "Gradescope", target: "Turnitin", value: 0.9 },
     { source: "ChatGPT", target: "Century", value: 0.4 },
-    { source: "Claude", target: "Turnitin", value: 0.5 }
+    { source: "Claude", target: "Turnitin", value: 0.5 },
+    { source: "SUNO", target: "ChatGPT", value: 0.7 },
+    { source: "Stable Diffusion", target: "SUNO", value: 0.6 }
   ]
 };
 
@@ -107,10 +111,12 @@ simulation
   .alphaDecay(0.02); // Slower decay for more continuous movement
 
 simulation.on("tick", () => {
-  // Add small random movement to each node
+  // Add small random movement to each node and contain within bounds
   simulation.nodes().forEach(node => {
     node.x += jiggle();
     node.y += jiggle();
+    node.x = Math.max(30, Math.min(width - 30, node.x));
+    node.y = Math.max(30, Math.min(height - 30, node.y));
   });
 
   links
