@@ -4,6 +4,9 @@ const data = {
     // LLMs and Chatbots
     { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Claude", group: "LLM", description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Anthropic", group: "Platform", description: "AI research company and creator of Claude", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Midjourney", group: "LLM", description: "AI image generation focused on artistic quality", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "DeepSeek", group: "LLM", description: "Advanced language model for coding and analysis", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "SUNO", group: "LLM", description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Stable Diffusion", group: "LLM", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     
@@ -22,7 +25,11 @@ const data = {
     { source: "ChatGPT", target: "Century", value: 0.4 },
     { source: "Claude", target: "Turnitin", value: 0.5 },
     { source: "SUNO", target: "ChatGPT", value: 0.7 },
-    { source: "Stable Diffusion", target: "SUNO", value: 0.6 }
+    { source: "Stable Diffusion", target: "SUNO", value: 0.6 },
+    { source: "Anthropic", target: "Claude", value: 0.9 },
+    { source: "Midjourney", target: "Stable Diffusion", value: 0.8 },
+    { source: "DeepSeek", target: "ChatGPT", value: 0.7 },
+    { source: "DeepSeek", target: "Claude", value: 0.6 }
   ]
 };
 
