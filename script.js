@@ -10,6 +10,7 @@ const data = {
     { id: "Stable Diffusion", group: "LLM", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
 
     // Learning Platforms
+    { id: "Teachermatic", group: "Platform", description: "AI-powered teaching assistant and lesson planning tool", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
     { id: "Century", group: "Platform", description: "Adaptive learning platform using AI", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Advanced" },
     { id: "Third Space Learning", group: "Platform", description: "AI-powered math tutoring platform", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
 
@@ -28,7 +29,9 @@ const data = {
     { source: "Anthropic", target: "Claude", value: 0.9 },
     { source: "Midjourney", target: "Stable Diffusion", value: 0.8 },
     { source: "DeepSeek", target: "ChatGPT", value: 0.7 },
-    { source: "DeepSeek", target: "Claude", value: 0.6 }
+    { source: "DeepSeek", target: "Claude", value: 0.6 },
+    { source: "Teachermatic", target: "ChatGPT", value: 0.7 },
+    { source: "Teachermatic", target: "Century", value: 0.5 }
   ]
 };
 
