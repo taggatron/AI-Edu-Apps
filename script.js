@@ -102,7 +102,7 @@ const nodes = svg.append("g")
   .join("g");
 
 nodes.append("circle")
-  .attr("r", 35) //Increased node radius
+  .attr("r", 45) // Further increased node radius for multi-line text
   .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : "#9999ff");
 
 // Function to randomly assign certification status
@@ -130,8 +130,13 @@ nodes.each(function(d) {
       text.append("tspan")
         .style("fill", "purple")
         .text("[");
-      text.append("tspan")
-        .text(d.id);
+      const words = d.id.split(' ');
+      words.forEach((word, i) => {
+        text.append("tspan")
+          .attr("x", 0)
+          .attr("dy", i === 0 ? "0" : "1.2em")
+          .text(word);
+      });
       text.append("tspan")
         .style("fill", "purple")
         .text("] ");
