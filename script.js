@@ -97,7 +97,22 @@ nodes.on("mouseover", (event, d) => {
   tooltip.style("opacity", 0);
 });
 
+// Add gentle continuous movement
+function jiggle() {
+  return (Math.random() - 0.5) * 0.3;
+}
+
+simulation
+  .alphaMin(0.001) // Prevent simulation from stopping completely
+  .alphaDecay(0.02); // Slower decay for more continuous movement
+
 simulation.on("tick", () => {
+  // Add small random movement to each node
+  simulation.nodes().forEach(node => {
+    node.x += jiggle();
+    node.y += jiggle();
+  });
+
   links
     .attr("x1", d => d.source.x)
     .attr("y1", d => d.source.y)
@@ -106,6 +121,12 @@ simulation.on("tick", () => {
 
   nodes.attr("transform", d => `translate(${d.x},${d.y})`);
 });
+
+// Keep simulation running
+d3.interval(() => {
+  simulation.alpha(0.1);
+  simulation.restart();
+}, 100);
 
 // Make the graph responsive
 window.addEventListener("resize", () => {
