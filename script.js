@@ -137,21 +137,21 @@ nodes.each(function(d) {
   g.append("image")
     .attr("xlink:href", d => {
       const logos = {
-        'ChatGPT': 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg',
-        'Claude': 'https://uploads-ssl.webflow.com/62a8755621a5fd7f42d13ba4/62af2fb535561e9e44171c65_Anthropic-Symbol-Full.svg',
-        'Anthropic': 'https://uploads-ssl.webflow.com/62a8755621a5fd7f42d13ba4/62af2fb535561e9e44171c65_Anthropic-Symbol-Full.svg',
-        'Midjourney': 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Midjourney_Emblem.png',
-        'DeepSeek': 'https://www.deepseek.com/_next/static/media/logo.8cd13c4f.svg',
-        'SUNO': 'https://suno.ai/logo.svg',
-        'Stable Diffusion': 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Stable_Diffusion_logo.png',
-        'Notion': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png',
-        'Perplexity AI': 'https://www.perplexity.ai/favicon.ico',
-        'Speechify': 'https://assets.speechify.com/assets/icons/speechify-logo-5114b3d7be7c3f99ed94c4fb0b4b98a1912c0cca94ba2c02c29fb10c5b21bed8.png',
-        'Century': 'https://century.tech/wp-content/themes/century/assets/images/century-logo.svg',
-        'Third Space Learning': 'https://thirdspacelearning.com/wp-content/themes/thirdspacelearning/dist/images/logo.svg',
-        'Gradescope': 'https://www.gradescope.com/favicon.ico',
-        'Turnitin': 'https://www.turnitin.com/static/media/turnitin-logo.svg',
-        'Teachermatic': 'https://teachermatic.co.uk/logo.png'
+        'ChatGPT': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
+        'Claude': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/anthropic.svg',
+        'Anthropic': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/anthropic.svg',
+        'Midjourney': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/midjourney.svg',
+        'DeepSeek': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
+        'SUNO': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/soundcloud.svg',
+        'Stable Diffusion': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/stability.svg',
+        'Notion': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/notion.svg',
+        'Perplexity AI': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
+        'Speechify': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/soundcloud.svg',
+        'Century': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/powershell.svg',
+        'Third Space Learning': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/overleaf.svg',
+        'Gradescope': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/gradle.svg',
+        'Turnitin': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/checkmarx.svg',
+        'Teachermatic': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/teachable.svg'
       }[d.id] || '';
     })
     .attr("x", -15)
