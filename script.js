@@ -255,3 +255,52 @@ window.addEventListener("resize", () => {
     .force("collision", d3.forceCollide().radius(35));
   simulation.alpha(1).restart();
 });
+
+// Control toggle functionality
+const toggleControlsBtn = document.getElementById('toggleControls');
+const controlsPanel = document.getElementById('controls');
+
+toggleControlsBtn.addEventListener('click', () => {
+  controlsPanel.style.display = controlsPanel.style.display === 'none' ? 'block' : 'none';
+});
+
+// Quadrant organization
+const organizeQuadrentsBtn = document.getElementById('organizeQuadrants');
+
+organizeQuadrentsBtn.addEventListener('click', () => {
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const padding = 100;
+
+  data.nodes.forEach(node => {
+    switch(node.group) {
+      case 'LLM':
+        node.fx = padding + Math.random() * (centerX - padding * 2);
+        node.fy = padding + Math.random() * (centerY - padding * 2);
+        break;
+      case 'Platform':
+        node.fx = centerX + padding + Math.random() * (width - centerX - padding * 2);
+        node.fy = padding + Math.random() * (centerY - padding * 2);
+        break;
+      case 'Image':
+        node.fx = padding + Math.random() * (centerX - padding * 2);
+        node.fy = centerY + padding + Math.random() * (height - centerY - padding * 2);
+        break;
+      case 'Assessment':
+        node.fx = centerX + padding + Math.random() * (width - centerX - padding * 2);
+        node.fy = centerY + padding + Math.random() * (height - centerY - padding * 2);
+        break;
+    }
+  });
+
+  simulation.alpha(1).restart();
+
+  // Release nodes after 3 seconds
+  setTimeout(() => {
+    data.nodes.forEach(node => {
+      node.fx = null;
+      node.fy = null;
+    });
+    simulation.alpha(1).restart();
+  }, 3000);
+});
