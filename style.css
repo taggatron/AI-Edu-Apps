@@ -91,6 +91,12 @@ html, body {
 
 .node {
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+circle:hover {
+  filter: drop-shadow(4px 4px 4px rgba(0,0,0,0.4)) brightness(1.1) !important;
+  transform: scale(1.05);
 }
 
 table {
