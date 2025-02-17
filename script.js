@@ -281,34 +281,25 @@ organizeQuadrentsBtn.addEventListener('click', () => {
     'Assessment': data.nodes.filter(n => n.group === 'Assessment')
   };
 
-  // Calculate grid positions for each quadrant
+  // Randomize positions within quadrants
   Object.entries(groupedNodes).forEach(([group, nodes]) => {
-    const nodesCount = nodes.length;
-    const cols = Math.ceil(Math.sqrt(nodesCount));
-    const rows = Math.ceil(nodesCount / cols);
-    const cellWidth = (centerX - padding * 2) / cols;
-    const cellHeight = (centerY - padding * 2) / rows;
-
-    nodes.forEach((node, index) => {
-      const row = Math.floor(index / cols);
-      const col = index % cols;
-      
+    nodes.forEach(node => {
       switch(group) {
         case 'LLM':
-          node.fx = padding + col * cellWidth + cellWidth/2;
-          node.fy = padding + row * cellHeight + cellHeight/2;
+          node.fx = padding + Math.random() * (centerX - padding * 2);
+          node.fy = padding + Math.random() * (centerY - padding * 2);
           break;
         case 'Platform':
-          node.fx = centerX + padding + col * cellWidth + cellWidth/2;
-          node.fy = padding + row * cellHeight + cellHeight/2;
+          node.fx = centerX + Math.random() * (centerX - padding * 2);
+          node.fy = padding + Math.random() * (centerY - padding * 2);
           break;
         case 'Image':
-          node.fx = padding + col * cellWidth + cellWidth/2;
-          node.fy = centerY + padding + row * cellHeight + cellHeight/2;
+          node.fx = padding + Math.random() * (centerX - padding * 2);
+          node.fy = centerY + Math.random() * (centerY - padding * 2);
           break;
         case 'Assessment':
-          node.fx = centerX + padding + col * cellWidth + cellWidth/2;
-          node.fy = centerY + padding + row * cellHeight + cellHeight/2;
+          node.fx = centerX + Math.random() * (centerX - padding * 2);
+          node.fy = centerY + Math.random() * (centerY - padding * 2);
           break;
       }
     });
