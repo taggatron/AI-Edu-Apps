@@ -37,6 +37,7 @@
   border-radius: 50%;
 }
 
+.dot.image { background: #9999ff; }
 .dot.llm { background: #ff9999; }
 .dot.platform { background: #99ff99; }
 .dot.assessment { background: #9999ff; }

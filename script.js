@@ -7,10 +7,10 @@ const data = {
     { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Claude", group: "LLM", description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
     { id: "Anthropic", group: "Platform", description: "AI research company and creator of Claude", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
-    { id: "Midjourney", group: "LLM", description: "AI image generation focused on artistic quality", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Midjourney", group: "Image", description: "AI image generation focused on artistic quality", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "DeepSeek", group: "LLM", description: "Advanced language model for coding and analysis", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "SUNO", group: "LLM", description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Stable Diffusion", group: "LLM", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Stable Diffusion", group: "Image", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Notion", group: "Platform", description: "AI-enhanced workspace and note-taking platform", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Perplexity AI", group: "LLM", description: "AI-powered search and research assistant", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
     { id: "Speechify", group: "LLM", description: "AI text-to-speech and document reader", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
@@ -103,7 +103,7 @@ const nodes = svg.append("g")
 
 nodes.append("circle")
   .attr("r", 35) //Increased node radius
-  .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : "#9999ff");
+  .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image"? "#2196F3" : "#9999ff");
 
 // Function to randomly assign certification status
 function getRandomStatus() {
@@ -119,7 +119,7 @@ data.nodes.forEach(node => {
 // Add images and text to nodes
 nodes.each(function(d) {
   const g = d3.select(this);
-  
+
   // Add text first
   g.append("text")
     .attr("text-anchor", "middle")
