@@ -102,32 +102,8 @@ const nodes = svg.append("g")
   .join("g");
 
 nodes.append("circle")
-  .attr("r", 35)
-  .style("fill", d => {
-    const defs = svg.append("defs");
-    const gradientId = `gradient-${d.id}`;
-    
-    const gradient = defs.append("radialGradient")
-      .attr("id", gradientId)
-      .attr("cx", "30%")
-      .attr("cy", "30%");
-      
-    gradient.append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "white");
-      
-    gradient.append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", d.group === "LLM" ? "#ff9999" : 
-                         d.group === "Platform" ? "#99ff99" : 
-                         d.group === "Image" ? "#2196F3" : 
-                         "#9999ff");
-    
-    return `url(#${gradientId})`;
-  })
-  .style("filter", "drop-shadow(3px 3px 2px rgba(0,0,0,0.3))")
-  .style("stroke", "#fff")
-  .style("stroke-width", "2px");
+  .attr("r", 35) //Increased node radius
+  .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image"? "#2196F3" : "#9999ff");
 
 // Function to randomly assign certification status
 function getRandomStatus() {
