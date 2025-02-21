@@ -152,8 +152,19 @@ const nodes = svg.append("g")
   .data(data.nodes)
   .join("g");
 
+// Function to randomly assign initial scale
+function getRandomScale() {
+  return Math.random() * 0.5 + 0.75; // Scale between 0.75 and 1.25
+}
+
+// Add scale to each node
+data.nodes.forEach(node => {
+  node.scale = getRandomScale();
+  node.scaleDirection = 1; // 1 for increasing, -1 for decreasing
+});
+
 nodes.append("circle")
-  .attr("r", 35) // Increased node radius
+  .attr("r", 35) // Base node radius
   .style("fill", d => {
     const baseColor = d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image" ? "#2196F3" : "#9999ff";
     return `url(#gradient-${d.group})`;
@@ -277,6 +288,16 @@ simulation.on("tick", () => {
     node.y += jiggle();
     node.x = Math.max(35, Math.min(width - 35, node.x));
     node.y = Math.max(35, Math.min(height - 35, node.y));
+
+    // Update scale
+    node.scale += node.scaleDirection * 0.005; // Reduced speed
+    if (node.scale >= 1.25) {
+      node.scale = 1.25;
+      node.scaleDirection = -1;
+    } else if (node.scale <= 0.75) {
+      node.scale = 0.75;
+      node.scaleDirection = 1;
+    }
   });
 
   links
@@ -285,7 +306,8 @@ simulation.on("tick", () => {
     .attr("x2", d => d.target.x)
     .attr("y2", d => d.target.y);
 
-  nodes.attr("transform", d => `translate(${d.x},${d.y})`);
+  nodes.attr("transform", d => `translate(${d.x},${d.y}) scale(${d.scale})`)
+    .style("z-index", d => d.scale); // Adjust z-index based on scale
 });
 
 // Keep simulation running
