@@ -186,27 +186,46 @@ data.nodes.forEach(node => {
 nodes.each(function(d) {
   const g = d3.select(this);
 
-  // Add text first
-  g.append("text")
+  // Add text container below the node
+  const textContainer = g.append("rect")
+    .attr("class", "text-container")
+    .attr("x", -50)
+    .attr("y", 40)
+    .attr("width", 100)
+    .attr("height", 20)
+    .attr("rx", 5)
+    .attr("ry", 5);
+
+  // Add text below the node
+  const text = g.append("text")
     .attr("text-anchor", "middle")
-    .attr("dy", "-5")
+    .attr("dy", "55") // Position text below the node
     .style("font-size", "12px")
+    .style("text-anchor", "middle") // Ensure text is centrally aligned
     .each(function() {
-      const text = d3.select(this);
-      text.append("tspan")
+      const tspan = d3.select(this);
+      tspan.append("tspan")
         .style("fill", "purple")
         .text("[");
-      text.append("tspan")
+      tspan.append("tspan")
         .text(d.id);
-      text.append("tspan")
+      tspan.append("tspan")
         .style("fill", "purple")
         .text("] ");
-      text.append("tspan")
+      tspan.append("tspan")
         .style("fill", d => d.certStatus === '✓' ? 'green' : 
                            d.certStatus === '✗' ? 'red' : 
                            'orange')
         .text(d => d.certStatus);
     });
+
+  // Adjust text container size based on text width
+  const bbox = text.node().getBBox();
+  textContainer
+    .attr("x", bbox.x - 5)
+    .attr("y", bbox.y - 5)
+    .attr("width", bbox.width + 10)
+    .attr("height", bbox.height + 10);
 
   // Add image below text
   g.append("image")

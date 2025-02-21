@@ -96,6 +96,15 @@ html, body {
   filter: url(#drop-shadow);
 }
 
+.node text {
+  filter: url(#text-blur);
+}
+
+.text-container {
+  fill: white;
+  opacity: 0.8;
+}
+
 table {
   border-collapse: collapse;
   margin-top: 10px;
