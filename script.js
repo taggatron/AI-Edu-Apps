@@ -1,28 +1,64 @@
 const data = {
   nodes: [
     // LLMs and Chatbots
-    { id: "DALL-E", group: "LLM", description: "AI image generation by OpenAI", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
-    { id: "Runway ML", group: "Platform", description: "AI-powered creative tools for video and image editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Canva", group: "Platform", description: "Design platform with AI-powered features", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "ChatGPT", group: "LLM", description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
-    { id: "Claude", group: "LLM", description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
-    { id: "Anthropic", group: "Platform", description: "AI research company and creator of Claude", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
-    { id: "Midjourney", group: "Image", description: "AI image generation focused on artistic quality", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "DeepSeek", group: "LLM", description: "Advanced language model for coding and analysis", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "SUNO", group: "LLM", description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Stable Diffusion", group: "Image", description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Notion", group: "Platform", description: "AI-enhanced workspace and note-taking platform", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Perplexity AI", group: "LLM", description: "AI-powered search and research assistant", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Speechify", group: "LLM", description: "AI text-to-speech and document reader", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "DALL-E", group: "LLM", description: "AI image generation by OpenAI", 
+      features: ["Image Generation", "Style Transfer", "Photo Editing", "Art Creation"],
+      gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Runway ML", group: "Platform", 
+      features: ["Video Editing", "Motion Generation", "Image Synthesis", "Text-to-Video"],
+      description: "AI-powered creative tools for video and image editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Canva", group: "Platform", 
+      features: ["Design Templates", "AI Magic Edit", "Brand Kit", "Collaboration"],
+      description: "Design platform with AI-powered features", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "ChatGPT", group: "LLM", 
+      features: ["Text Generation", "Code Assistant", "Learning Support", "Content Creation"],
+      description: "Conversational AI for education support and content generation", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Claude", group: "LLM", 
+      features: ["Research Assistant", "Long-form Writing", "Analysis", "Educational Support"],
+      description: "Advanced AI assistant for research and writing", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Anthropic", group: "Platform", 
+      features: ["AI Safety", "Research Tools", "Model Training", "Ethics Framework"],
+      description: "AI research company and creator of Claude", gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Midjourney", group: "Image", 
+      features: ["Art Generation", "Style Customization", "Design Tools", "Creative Assistance"],
+      description: "AI image generation focused on artistic quality", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "DeepSeek", group: "LLM", 
+      features: ["Code Generation", "Technical Analysis", "Problem Solving", "Documentation"],
+      description: "Advanced language model for coding and analysis", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "SUNO", group: "LLM", 
+      features: ["Music Creation", "Audio Generation", "Composition", "Sound Design"],
+      description: "AI music generation and composition", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Stable Diffusion", group: "Image", 
+      features: ["Image Generation", "Model Training", "Custom Styles", "Batch Processing"],
+      description: "AI image generation and editing", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Notion", group: "Platform", 
+      features: ["Note Organization", "AI Writing", "Knowledge Base", "Team Collaboration"],
+      description: "AI-enhanced workspace and note-taking platform", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Perplexity AI", group: "LLM", 
+      features: ["Research Assistant", "Citation Support", "Real-time Search", "Fact Checking"],
+      description: "AI-powered search and research assistant", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Speechify", group: "LLM", 
+      features: ["Text-to-Speech", "Voice Customization", "Document Reading", "Multi-language Support"],
+      description: "AI text-to-speech and document reader", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
 
     // Learning Platforms
-    { id: "Teachermatic", group: "Platform", description: "AI-powered teaching assistant and lesson planning tool", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
-    { id: "Century", group: "Platform", description: "Adaptive learning platform using AI", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Advanced" },
-    { id: "Third Space Learning", group: "Platform", description: "AI-powered math tutoring platform", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
+    { id: "Teachermatic", group: "Platform", 
+      features: ["Lesson Planning", "Resource Creation", "Assessment Tools", "Progress Tracking"],
+      description: "AI-powered teaching assistant and lesson planning tool", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
+    { id: "Century", group: "Platform", 
+      features: ["Personalized Learning", "Progress Analytics", "Content Creation", "Student Insights"],
+      description: "Adaptive learning platform using AI", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Advanced" },
+    { id: "Third Space Learning", group: "Platform", 
+      features: ["Math Tutoring", "Progress Tracking", "Interactive Learning", "Real-time Support"],
+      description: "AI-powered math tutoring platform", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "High" },
 
     // Assessment Tools
-    { id: "Gradescope", group: "Assessment", description: "AI-assisted grading and feedback", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Turnitin", group: "Assessment", description: "AI-powered plagiarism detection", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Enterprise" }
+    { id: "Gradescope", group: "Assessment", 
+      features: ["Auto Grading", "Feedback Generation", "Assignment Analytics", "Grade Management"],
+      description: "AI-assisted grading and feedback", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Turnitin", group: "Assessment", 
+      features: ["Plagiarism Detection", "Writing Feedback", "Similarity Checking", "Integration Tools"],
+      description: "AI-powered plagiarism detection", gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Enterprise" }
   ],
   links: [
     { source: "DALL-E", target: "Stable Diffusion", value: 0.9 },
@@ -274,35 +310,75 @@ nodes.each(function(d) {
 
 const tooltip = d3.select("#tooltip");
 
-nodes.on("mouseover", (event, d) => {
-  tooltip.style("opacity", 1)
-    .html(`
-      <h3>${d.id}</h3>
-      <p>${d.description}</p>
-      <table>
-        <tr>
-          <th>Feature</th>
-          <th>Status</th>
-        </tr>
-        <tr>
-          <td>GDPR Compliant</td>
-          <td>${d.gdpr}</td>
-        </tr>
-        <tr>
-          <td>UK Hosted</td>
-          <td>${d.ukHosted}</td>
-        </tr>
-        <tr>
-          <td>IP Security</td>
-          <td>${d.ipSecurity}</td>
-        </tr>
-      </table>
-    `)
-    .style("left", (event.pageX + 10) + "px")
-    .style("top", (event.pageY - 10) + "px");
-})
-.on("mouseout", () => {
-  tooltip.style("opacity", 0);
+const infoPanel = d3.select("#info-panel");
+
+nodes.on("click", (event, d) => {
+  // Stop event propagation
+  event.stopPropagation();
+  
+  // Get the color based on group
+  const categoryColor = d.group === "LLM" ? "#ff9999" : 
+                       d.group === "Platform" ? "#99ff99" : 
+                       d.group === "Image" ? "#2196F3" : 
+                       "#9999ff";
+  
+  // Update info panel content
+  infoPanel
+    .style("display", "block")
+    .select(".app-title")
+    .text(d.id);
+
+  infoPanel
+    .select(".app-category")
+    .text(d.group)
+    .style("background-color", categoryColor)
+    .style("color", "white");  // Make text white for better contrast
+
+  infoPanel
+    .select(".app-description")
+    .text(d.description);
+
+  // Update features
+  const features = infoPanel.select(".features-container");
+  features.html(""); // Clear existing content
+  features
+    .selectAll(".feature-badge")
+    .data(d.features || [])
+    .enter()
+    .append("span")
+    .attr("class", "feature-badge")
+    .text(feature => feature);
+
+  // Update security badges
+  const security = infoPanel.select(".security-container");
+  security.html(""); // Clear existing content
+  security
+    .selectAll(".security-badge")
+    .data([
+      `GDPR: ${d.gdpr}`,
+      `UK Hosted: ${d.ukHosted}`,
+      `Security: ${d.ipSecurity}`
+    ])
+    .enter()
+    .append("span")
+    .attr("class", "security-badge")
+    .text(d => d);
+
+  // Calculate and update similarity score based on connected nodes
+  const connections = data.links.filter(link => 
+    link.source.id === d.id || link.target.id === d.id
+  );
+  const avgStrength = connections.reduce((acc, curr) => acc + curr.value, 0) / 
+    Math.max(1, connections.length);
+  
+  infoPanel
+    .select(".similarity-bar")
+    .style("width", `${avgStrength * 100}%`);
+});
+
+// Close info panel when clicking outside
+svg.on("click", () => {
+  infoPanel.style("display", "none");
 });
 
 // Add gentle continuous movement
