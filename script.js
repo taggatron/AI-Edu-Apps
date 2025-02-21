@@ -129,12 +129,26 @@ const simulation = d3.forceSimulation(data.nodes)
   .force("collision", d3.forceCollide().radius(d => 35)) // Updated collision radius
   .force("boundary", () => {
     const padding = 50;
+    const radius = 35; // Match the node radius
     return function(alpha) {
       data.nodes.forEach(node => {
-        if (node.x < padding) node.vx += (padding - node.x) * alpha * 0.5;
-        if (node.x > width - padding) node.vx -= (node.x - (width - padding)) * alpha * 0.5;
-        if (node.y < padding) node.vy += (padding - node.y) * alpha * 0.5;
-        if (node.y > height - padding) node.vy -= (node.y - (height - padding)) * alpha * 0.5;
+        // Stronger boundary force and accounting for node radius
+        if (node.x < padding + radius) {
+          node.x = padding + radius;
+          node.vx = Math.abs(node.vx); // Reverse velocity if hitting left boundary
+        }
+        if (node.x > width - (padding + radius)) {
+          node.x = width - (padding + radius);
+          node.vx = -Math.abs(node.vx); // Reverse velocity if hitting right boundary
+        }
+        if (node.y < padding + radius) {
+          node.y = padding + radius;
+          node.vy = Math.abs(node.vy); // Reverse velocity if hitting top boundary
+        }
+        if (node.y > height - (padding + radius)) {
+          node.y = height - (padding + radius);
+          node.vy = -Math.abs(node.vy); // Reverse velocity if hitting bottom boundary
+        }
       });
     };
   });
@@ -300,16 +314,21 @@ simulation
   .alphaMin(0.001) // Prevent simulation from stopping completely
   .alphaDecay(0.02); // Slower decay for more continuous movement
 
+// Update the tick section in your simulation
 simulation.on("tick", () => {
   // Add small random movement to each node and contain within bounds
   simulation.nodes().forEach(node => {
     node.x += jiggle();
     node.y += jiggle();
-    node.x = Math.max(35, Math.min(width - 35, node.x));
-    node.y = Math.max(35, Math.min(height - 35, node.y));
+    
+    // More precise boundary containment
+    const radius = 50;
+    const padding = 50;
+    node.x = Math.max(padding + radius, Math.min(width - (padding + radius), node.x));
+    node.y = Math.max(padding + radius, Math.min(height - (padding + radius), node.y));
 
-    // Update scale
-    node.scale += node.scaleDirection * 0.005; // Reduced speed
+    // Rest of your existing scale logic
+    node.scale += node.scaleDirection * 0.005;
     if (node.scale >= 1.25) {
       node.scale = 1.25;
       node.scaleDirection = -1;
