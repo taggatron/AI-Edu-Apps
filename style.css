@@ -1,4 +1,3 @@
-
 #controls {
   position: fixed;
   top: 20px;
@@ -91,6 +90,10 @@ html, body {
 
 .node {
   cursor: pointer;
+}
+
+.node circle {
+  filter: url(#drop-shadow);
 }
 
 table {

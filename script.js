@@ -66,6 +66,31 @@ const svg = d3.select("#graph-container")
     }
   });
 
+// Add filter for 3D shading effect
+const defs = svg.append("defs");
+
+const filter = defs.append("filter")
+  .attr("id", "drop-shadow")
+  .attr("height", "130%");
+
+filter.append("feGaussianBlur")
+  .attr("in", "SourceAlpha")
+  .attr("stdDeviation", 3)
+  .attr("result", "blur");
+
+filter.append("feOffset")
+  .attr("in", "blur")
+  .attr("dx", 2)
+  .attr("dy", 2)
+  .attr("result", "offsetBlur");
+
+const feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode")
+  .attr("in", "offsetBlur");
+feMerge.append("feMergeNode")
+  .attr("in", "SourceGraphic");
+
 // Calculate the optimal distance based on viewport size
 const optimalDistance = Math.min(width, height) / 4;
 
@@ -103,7 +128,8 @@ const nodes = svg.append("g")
 
 nodes.append("circle")
   .attr("r", 35) //Increased node radius
-  .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image"? "#2196F3" : "#9999ff");
+  .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image"? "#2196F3" : "#9999ff")
+  .style("filter", "url(#drop-shadow)");
 
 // Function to randomly assign certification status
 function getRandomStatus() {
