@@ -91,6 +91,32 @@ feMerge.append("feMergeNode")
 feMerge.append("feMergeNode")
   .attr("in", "SourceGraphic");
 
+// Add gradient definitions for 3D shading effect
+const gradients = [
+  { id: 'LLM', color: '#ff9999' },
+  { id: 'Platform', color: '#99ff99' },
+  { id: 'Image', color: '#2196F3' },
+  { id: 'Assessment', color: '#9999ff' }
+];
+
+gradients.forEach(gradient => {
+  const grad = defs.append("radialGradient")
+    .attr("id", `gradient-${gradient.id}`)
+    .attr("cx", "50%")
+    .attr("cy", "50%")
+    .attr("r", "50%")
+    .attr("fx", "50%")
+    .attr("fy", "50%");
+
+  grad.append("stop")
+    .attr("offset", "0%")
+    .attr("style", `stop-color:${gradient.color};stop-opacity:1`);
+
+  grad.append("stop")
+    .attr("offset", "100%")
+    .attr("style", `stop-color:${d3.color(gradient.color).darker(1)};stop-opacity:1`);
+});
+
 // Calculate the optimal distance based on viewport size
 const optimalDistance = Math.min(width, height) / 4;
 
@@ -127,8 +153,11 @@ const nodes = svg.append("g")
   .join("g");
 
 nodes.append("circle")
-  .attr("r", 35) //Increased node radius
-  .style("fill", d => d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image"? "#2196F3" : "#9999ff")
+  .attr("r", 35) // Increased node radius
+  .style("fill", d => {
+    const baseColor = d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image" ? "#2196F3" : "#9999ff";
+    return `url(#gradient-${d.group})`;
+  })
   .style("filter", "url(#drop-shadow)");
 
 // Function to randomly assign certification status
