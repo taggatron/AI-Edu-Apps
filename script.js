@@ -383,7 +383,7 @@ svg.on("click", () => {
 
 // Add gentle continuous movement
 function jiggle() {
-  return (Math.random() - 0.5) * 0.3;
+  return (Math.random() - 0.5) * 0.01; // Further reduced movement amplitude
 }
 
 simulation
@@ -404,7 +404,7 @@ simulation.on("tick", () => {
     node.y = Math.max(padding + radius, Math.min(height - (padding + radius), node.y));
 
     // Rest of your existing scale logic
-    node.scale += node.scaleDirection * 0.005;
+    node.scale += node.scaleDirection * 0.00005;
     if (node.scale >= 1.25) {
       node.scale = 1.25;
       node.scaleDirection = -1;
