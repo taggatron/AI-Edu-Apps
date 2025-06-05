@@ -312,8 +312,29 @@ const tooltip = d3.select("#tooltip");
 
 const infoPanel = d3.select("#info-panel");
 
+// --- Info Panel: Add Close Button and Animate ---
+// Add close button to info panel if not present
+if (!document.querySelector('.info-panel .close-btn')) {
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'close-btn';
+  closeBtn.innerHTML = '✕';
+  closeBtn.setAttribute('aria-label', 'Close info panel');
+  closeBtn.onclick = function(e) {
+    e.stopPropagation();
+    infoPanel.style('display', 'none');
+  };
+  const header = document.querySelector('.info-panel .info-header');
+  if (header) header.appendChild(closeBtn);
+}
+
+// Animate info panel appearance
+function showInfoPanel() {
+  infoPanel.style('display', 'block');
+  infoPanel.node().style.animation = 'fadeInPanel 0.4s cubic-bezier(.4,0,.2,1)';
+}
+
+// Update info panel show logic
 nodes.on("click", (event, d) => {
-  // Stop event propagation
   event.stopPropagation();
   
   // Get the color based on group
@@ -373,12 +394,24 @@ nodes.on("click", (event, d) => {
   
   infoPanel
     .select(".similarity-bar")
+    .style("width", '0%')
+    .transition()
+    .duration(500)
     .style("width", `${avgStrength * 100}%`);
+
+  showInfoPanel();
 });
 
 // Close info panel when clicking outside
 svg.on("click", () => {
   infoPanel.style("display", "none");
+});
+
+// Accessibility: allow keyboard navigation for legend and controls
+const legendItems = document.querySelectorAll('.legend-item');
+legendItems.forEach(item => {
+  item.setAttribute('tabindex', '0');
+  item.setAttribute('role', 'button');
 });
 
 // Add gentle continuous movement
