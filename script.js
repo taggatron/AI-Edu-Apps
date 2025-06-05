@@ -540,3 +540,68 @@ organizeQuadrentsBtn.addEventListener('click', () => {
     simulation.alpha(1).restart();
   }, 3000);
 });
+
+// Add a floating key/legend to the main canvas (graph-container)
+const canvasKey = document.createElement('div');
+canvasKey.id = 'canvas-key';
+canvasKey.innerHTML = `
+  <h4>Key</h4>
+  <div class="canvas-key-row"><span class="dot llm"></span> LLM</div>
+  <div class="canvas-key-row"><span class="dot platform"></span> Platform</div>
+  <div class="canvas-key-row"><span class="dot image"></span> Image Creation</div>
+  <div class="canvas-key-row"><span class="dot assessment"></span> Assessment</div>
+  <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">✓</span> Certified</div>
+  <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">✗</span> Not Certified</div>
+  <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">?</span> Unknown</div>
+`;
+canvasKey.style.position = 'fixed';
+canvasKey.style.bottom = '24px';
+canvasKey.style.right = '24px';
+canvasKey.style.background = 'rgba(255,255,255,0.95)';
+canvasKey.style.borderRadius = '10px';
+canvasKey.style.boxShadow = '0 4px 24px rgba(60,60,100,0.13)';
+canvasKey.style.padding = '18px 20px 14px 20px';
+canvasKey.style.zIndex = 120;
+canvasKey.style.fontSize = '1rem';
+canvasKey.style.minWidth = '120px';
+canvasKey.style.pointerEvents = 'auto';
+canvasKey.style.userSelect = 'none';
+canvasKey.style.transition = 'box-shadow 0.2s';
+canvasKey.style.border = '1.5px solid #e0e7ff';
+canvasKey.style.backdropFilter = 'blur(4px)';
+canvasKey.querySelector('h4').style.margin = '0 0 10px 0';
+canvasKey.querySelector('h4').style.fontSize = '1.08rem';
+canvasKey.querySelector('h4').style.color = '#6366f1';
+
+// Add key rows styling
+const style = document.createElement('style');
+style.innerHTML = `
+  .canvas-key-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+`;
+document.head.appendChild(style);
+
+document.body.appendChild(canvasKey);
+
+// Ensure top left and top right buttons do not overlap
+// Move organizeQuadrants button to top right with spacing
+if (typeof organizeQuadrentsBtn !== 'undefined' && organizeQuadrentsBtn) {
+  organizeQuadrentsBtn.style.position = 'fixed';
+  organizeQuadrentsBtn.style.top = '24px';
+  organizeQuadrentsBtn.style.right = '24px';
+  organizeQuadrentsBtn.style.zIndex = 101;
+}
+
+// Adjust the top left button to only say 'Legend / Search' and keep it top left
+if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
+  toggleControlsBtn.textContent = '🔍 Search';
+  toggleControlsBtn.style.position = 'fixed';
+  toggleControlsBtn.style.top = '24px';
+  toggleControlsBtn.style.left = '24px';
+  toggleControlsBtn.style.zIndex = 101;
+}
