@@ -605,9 +605,9 @@ canvasKey.innerHTML = `
   <div class="canvas-key-row" data-group="Platform"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Platform)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Platform</div>
   <div class="canvas-key-row" data-group="Image"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Image)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Image Creation</div>
   <div class="canvas-key-row" data-group="Assessment"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Assessment)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Assessment</div>
-  <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">✓</span> Certified</div>
-  <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">✗</span> Not Certified</div>
-  <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">?</span> Unknown</div>
+  <div class="canvas-key-row" data-cert="✓"><span style="display:inline-block;width:18px;text-align:center;color:green;font-weight:bold;">✓</span> Certified</div>
+  <div class="canvas-key-row" data-cert="✗"><span style="display:inline-block;width:18px;text-align:center;color:red;font-weight:bold;">✗</span> Not Certified</div>
+  <div class="canvas-key-row" data-cert="?"><span style="display:inline-block;width:18px;text-align:center;color:orange;font-weight:bold;">?</span> Unknown</div>
 `;
 canvasKey.style.position = 'fixed';
 canvasKey.style.bottom = '24px';
@@ -652,6 +652,7 @@ document.head.appendChild(style);
 
 // --- Key Filtering Functionality ---
 let activeKeyGroup = null;
+let activeCertStatus = null;
 canvasKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
   row.addEventListener('click', function(e) {
     e.stopPropagation();
@@ -673,17 +674,45 @@ canvasKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
       canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       this.classList.add('active');
       activeKeyGroup = group;
+      activeCertStatus = null;
+    }
+  });
+});
+// Certification status filtering
+canvasKey.querySelectorAll('.canvas-key-row[data-cert]').forEach(row => {
+  row.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const cert = this.getAttribute('data-cert');
+    if (activeCertStatus === cert) {
+      // Reset filter
+      nodes.style('display', '');
+      links.style('display', '');
+      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      activeCertStatus = null;
+    } else {
+      // Filter nodes/links by cert status
+      nodes.each(function(d) {
+        d3.select(this).style('display', d.certStatus === cert ? '' : 'none');
+      });
+      links.style('display', function(d) {
+        return (d.source.certStatus === cert && d.target.certStatus === cert) ? '' : 'none';
+      });
+      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      this.classList.add('active');
+      activeCertStatus = cert;
+      activeKeyGroup = null;
     }
   });
 });
 // Reset filter if clicking outside the key
 window.addEventListener('click', function(e) {
   if (!canvasKey.contains(e.target)) {
-    if (activeKeyGroup) {
+    if (activeKeyGroup || activeCertStatus) {
       nodes.style('display', '');
       links.style('display', '');
       canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       activeKeyGroup = null;
+      activeCertStatus = null;
     }
   }
 });
