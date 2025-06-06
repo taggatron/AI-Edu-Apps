@@ -605,3 +605,81 @@ if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
   toggleControlsBtn.style.left = '24px';
   toggleControlsBtn.style.zIndex = 101;
 }
+
+// --- Enhanced Feature Search Dropdown ---
+// Build a feature search dropdown panel
+const featureSearchPanel = document.createElement('div');
+featureSearchPanel.id = 'feature-search-panel';
+featureSearchPanel.style.position = 'fixed';
+featureSearchPanel.style.top = '70px';
+featureSearchPanel.style.left = '24px';
+featureSearchPanel.style.background = 'rgba(255,255,255,0.98)';
+featureSearchPanel.style.borderRadius = '12px';
+featureSearchPanel.style.boxShadow = '0 4px 24px rgba(60,60,100,0.13)';
+featureSearchPanel.style.padding = '18px 20px 18px 20px';
+featureSearchPanel.style.zIndex = 200;
+featureSearchPanel.style.minWidth = '220px';
+featureSearchPanel.style.display = 'none';
+featureSearchPanel.style.maxHeight = '60vh';
+featureSearchPanel.style.overflowY = 'auto';
+
+// Collect all unique features from all apps
+const allFeatures = Array.from(new Set(data.nodes.flatMap(n => n.features)));
+
+featureSearchPanel.innerHTML = `
+  <h4 style="margin:0 0 10px 0;color:#6366f1;font-size:1.08rem;">Filter by Features</h4>
+  <form id="feature-checkbox-form">
+    ${allFeatures.map(f => `
+      <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:1rem;">
+        <input type="checkbox" name="feature" value="${f.replace(/"/g, '&quot;')}">
+        <span>${f}</span>
+      </label>
+    `).join('')}
+  </form>
+  <button id="display-feature-filter" style="margin-top:12px;width:100%;padding:8px 0;border-radius:6px;background:#6366f1;color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;">Display</button>
+`;
+
+document.body.appendChild(featureSearchPanel);
+
+// Toggle feature search panel on search button click
+if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
+  toggleControlsBtn.onclick = function(e) {
+    e.stopPropagation();
+    featureSearchPanel.style.display = featureSearchPanel.style.display === 'none' ? 'block' : 'none';
+  };
+}
+
+// Hide panel if clicking outside
+window.addEventListener('click', function(e) {
+  if (!featureSearchPanel.contains(e.target) && e.target !== toggleControlsBtn) {
+    featureSearchPanel.style.display = 'none';
+  }
+});
+
+// --- Feature Filtering Logic ---
+const originalNodeDisplay = new Map();
+nodes.each(function(d) {
+  originalNodeDisplay.set(d.id, d3.select(this).style('display'));
+});
+
+const displayBtn = featureSearchPanel.querySelector('#display-feature-filter');
+displayBtn.onclick = function(e) {
+  e.preventDefault();
+  const checked = Array.from(featureSearchPanel.querySelectorAll('input[type=checkbox][name=feature]:checked')).map(cb => cb.value);
+  if (checked.length === 0) {
+    // Show all nodes if nothing selected
+    nodes.style('display', '');
+    links.style('display', '');
+    return;
+  }
+  // Find node ids that match all selected features
+  const matchingIds = data.nodes.filter(n => checked.every(f => n.features.includes(f))).map(n => n.id);
+  // Show/hide nodes
+  nodes.each(function(d) {
+    d3.select(this).style('display', matchingIds.includes(d.id) ? '' : 'none');
+  });
+  // Show only links where both source and target are visible
+  links.style('display', function(d) {
+    return (matchingIds.includes(d.source.id) && matchingIds.includes(d.target.id)) ? '' : 'none';
+  });
+};
