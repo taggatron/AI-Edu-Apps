@@ -141,16 +141,22 @@ gradients.forEach(gradient => {
     .attr("cx", "50%")
     .attr("cy", "50%")
     .attr("r", "50%")
-    .attr("fx", "50%")
-    .attr("fy", "50%");
+    .attr("fx", "40%")
+    .attr("fy", "40%")
+    .attr("gradientUnits", "objectBoundingBox");
 
   grad.append("stop")
     .attr("offset", "0%")
-    .attr("style", `stop-color:${gradient.color};stop-opacity:1`);
-
+    .attr("stop-color", d3.color(gradient.color).brighter(1.5).formatHex())
+    .attr("stop-opacity", 0.85);
+  grad.append("stop")
+    .attr("offset", "60%")
+    .attr("stop-color", gradient.color)
+    .attr("stop-opacity", 0.7);
   grad.append("stop")
     .attr("offset", "100%")
-    .attr("style", `stop-color:${d3.color(gradient.color).darker(1)};stop-opacity:1`);
+    .attr("stop-color", d3.color(gradient.color).darker(1.2).formatHex())
+    .attr("stop-opacity", 0.55);
 });
 
 // Calculate the optimal distance based on viewport size
@@ -215,11 +221,39 @@ data.nodes.forEach(node => {
 
 nodes.append("circle")
   .attr("r", 35) // Base node radius
-  .style("fill", d => {
-    const baseColor = d.group === "LLM" ? "#ff9999" : d.group === "Platform" ? "#99ff99" : d.group === "Image" ? "#2196F3" : "#9999ff";
-    return `url(#gradient-${d.group})`;
-  })
-  .style("filter", "url(#drop-shadow)");
+  .style("fill", d => `url(#gradient-${d.group})`)
+  .style("filter", "url(#drop-shadow)")
+  .style("opacity", 0.85); // More glassy
+
+// Add glass highlight gradient definition
+const highlightGrad = defs.append("radialGradient")
+  .attr("id", "glass-highlight-gradient")
+  .attr("cx", "50%")
+  .attr("cy", "50%")
+  .attr("r", "50%")
+  .attr("fx", "50%")
+  .attr("fy", "50%")
+  .attr("gradientUnits", "objectBoundingBox");
+
+highlightGrad.append("stop")
+  .attr("offset", "0%")
+  .attr("stop-color", "#fff")
+  .attr("stop-opacity", 0.7);
+highlightGrad.append("stop")
+  .attr("offset", "80%")
+  .attr("stop-color", "#fff")
+  .attr("stop-opacity", 0.15);
+highlightGrad.append("stop")
+  .attr("offset", "100%")
+  .attr("stop-color", "#fff")
+  .attr("stop-opacity", 0);
+
+// Add glass highlight ellipse to each node, with dynamic position
+const highlightEllipses = nodes.append("ellipse")
+  .attr("rx", 13)
+  .attr("ry", 7)
+  .style("fill", "url(#glass-highlight-gradient)")
+  .style("pointer-events", "none");
 
 // Function to randomly assign certification status
 function getRandomStatus() {
@@ -454,7 +488,28 @@ simulation.on("tick", () => {
     .attr("y2", d => d.target.y);
 
   nodes.attr("transform", d => `translate(${d.x},${d.y}) scale(${d.scale})`)
-    .style("z-index", d => d.scale); // Adjust z-index based on scale
+    .style("z-index", d => d.scale);
+
+  // Dynamically move highlight to follow virtual light at top left
+  const lightX = -width * 0.2; // Virtual light far outside top left
+  const lightY = -height * 0.2;
+  highlightEllipses
+    .attr("cx", function(d) {
+      // Vector from node to light
+      const dx = lightX - d.x;
+      const dy = lightY - d.y;
+      // Normalize and scale highlight offset
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const offset = 18; // How far from center
+      return Math.cos(Math.atan2(dy, dx)) * offset;
+    })
+    .attr("cy", function(d) {
+      const dx = lightX - d.x;
+      const dy = lightY - d.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const offset = 18;
+      return Math.sin(Math.atan2(dy, dx)) * offset;
+    });
 });
 
 // Keep simulation running
