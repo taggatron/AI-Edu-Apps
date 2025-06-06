@@ -601,10 +601,10 @@ const canvasKey = document.createElement('div');
 canvasKey.id = 'canvas-key';
 canvasKey.innerHTML = `
   <h4>Key</h4>
-  <div class="canvas-key-row"><span class="dot llm"></span> LLM</div>
-  <div class="canvas-key-row"><span class="dot platform"></span> Platform</div>
-  <div class="canvas-key-row"><span class="dot image"></span> Image Creation</div>
-  <div class="canvas-key-row"><span class="dot assessment"></span> Assessment</div>
+  <div class="canvas-key-row" data-group="LLM"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-LLM)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> LLM</div>
+  <div class="canvas-key-row" data-group="Platform"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Platform)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Platform</div>
+  <div class="canvas-key-row" data-group="Image"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Image)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Image Creation</div>
+  <div class="canvas-key-row" data-group="Assessment"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Assessment)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Assessment</div>
   <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">✓</span> Certified</div>
   <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">✗</span> Not Certified</div>
   <div class="canvas-key-row"><span style="display:inline-block;width:18px;text-align:center;">?</span> Unknown</div>
@@ -628,6 +628,8 @@ canvasKey.querySelector('h4').style.margin = '0 0 10px 0';
 canvasKey.querySelector('h4').style.fontSize = '1.08rem';
 canvasKey.querySelector('h4').style.color = '#6366f1';
 
+document.body.appendChild(canvasKey);
+
 // Add key rows styling
 const style = document.createElement('style');
 style.innerHTML = `
@@ -637,29 +639,54 @@ style.innerHTML = `
     gap: 10px;
     margin-bottom: 6px;
     font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .canvas-key-row.active {
+    background: #e0e7ff;
   }
 `;
 document.head.appendChild(style);
 
-document.body.appendChild(canvasKey);
-
-// Ensure top left and top right buttons do not overlap
-// Move organizeQuadrants button to top right with spacing
-if (typeof organizeQuadrentsBtn !== 'undefined' && organizeQuadrentsBtn) {
-  organizeQuadrentsBtn.style.position = 'fixed';
-  organizeQuadrentsBtn.style.top = '24px';
-  organizeQuadrentsBtn.style.right = '24px';
-  organizeQuadrentsBtn.style.zIndex = 101;
-}
-
-// Adjust the top left button to only say 'Legend / Search' and keep it top left
-if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
-  toggleControlsBtn.textContent = '🔍 Search';
-  toggleControlsBtn.style.position = 'fixed';
-  toggleControlsBtn.style.top = '24px';
-  toggleControlsBtn.style.left = '24px';
-  toggleControlsBtn.style.zIndex = 101;
-}
+// --- Key Filtering Functionality ---
+let activeKeyGroup = null;
+canvasKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
+  row.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const group = this.getAttribute('data-group');
+    if (activeKeyGroup === group) {
+      // Reset filter
+      nodes.style('display', '');
+      links.style('display', '');
+      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      activeKeyGroup = null;
+    } else {
+      // Filter nodes/links
+      nodes.each(function(d) {
+        d3.select(this).style('display', d.group === group ? '' : 'none');
+      });
+      links.style('display', function(d) {
+        return (d.source.group === group && d.target.group === group) ? '' : 'none';
+      });
+      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      this.classList.add('active');
+      activeKeyGroup = group;
+    }
+  });
+});
+// Reset filter if clicking outside the key
+window.addEventListener('click', function(e) {
+  if (!canvasKey.contains(e.target)) {
+    if (activeKeyGroup) {
+      nodes.style('display', '');
+      links.style('display', '');
+      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      activeKeyGroup = null;
+    }
+  }
+});
 
 // --- Enhanced Feature Search Dropdown ---
 // Build a feature search dropdown panel
@@ -701,6 +728,9 @@ if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
   toggleControlsBtn.onclick = function(e) {
     e.stopPropagation();
     featureSearchPanel.style.display = featureSearchPanel.style.display === 'none' ? 'block' : 'none';
+    // Remove any key container in the top left (feature search panel key)
+    const topLeftKey = document.querySelector('.feature-search-key, #feature-search-key');
+    if (topLeftKey) topLeftKey.remove();
   };
 }
 
@@ -738,3 +768,11 @@ displayBtn.onclick = function(e) {
     return (matchingIds.includes(d.source.id) && matchingIds.includes(d.target.id)) ? '' : 'none';
   });
 };
+
+// Remove /html/body/div[2] on page load
+window.addEventListener('DOMContentLoaded', function() {
+  const divs = document.body.querySelectorAll('div');
+  if (divs.length > 1) {
+    divs[1].remove();
+  }
+});
