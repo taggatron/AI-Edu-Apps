@@ -717,88 +717,95 @@ window.addEventListener('click', function(e) {
   }
 });
 
-// --- Enhanced Feature Search Dropdown ---
-// Build a feature search dropdown panel
-const featureSearchPanel = document.createElement('div');
-featureSearchPanel.id = 'feature-search-panel';
-featureSearchPanel.style.position = 'fixed';
-featureSearchPanel.style.top = '70px';
-featureSearchPanel.style.left = '24px';
-featureSearchPanel.style.background = 'rgba(255,255,255,0.98)';
-featureSearchPanel.style.borderRadius = '12px';
-featureSearchPanel.style.boxShadow = '0 4px 24px rgba(60,60,100,0.13)';
-featureSearchPanel.style.padding = '18px 20px 18px 20px';
-featureSearchPanel.style.zIndex = 200;
-featureSearchPanel.style.minWidth = '220px';
-featureSearchPanel.style.display = 'none';
-featureSearchPanel.style.maxHeight = '60vh';
-featureSearchPanel.style.overflowY = 'auto';
+// --- Feature Category Modal: Only Show Larger Categories ---
+function showFeatureSearchPanel() {
+  // Remove if already exists
+  const oldPanel = document.getElementById('feature-search-panel');
+  if (oldPanel) oldPanel.remove();
 
-// Collect all unique features from all apps
-const allFeatures = Array.from(new Set(data.nodes.flatMap(n => n.features)));
+  // Define categories and subcategories
+  const featureCategories = [
+    { name: 'Image & Art Creation', features: ['Image Generation','Style Transfer','Photo Editing','Art Creation','Art Generation','Style Customization','Design Tools','Creative Assistance','Custom Styles','Batch Processing','Image Synthesis'] },
+    { name: 'Video & Audio', features: ['Video Editing','Motion Generation','Text-to-Video','Music Creation','Audio Generation','Composition','Sound Design'] },
+    { name: 'Design & Collaboration', features: ['Design Templates','AI Magic Edit','Brand Kit','Collaboration','Team Collaboration'] },
+    { name: 'Text, Writing & Content', features: ['Text Generation','Code Assistant','Learning Support','Content Creation','AI Writing','Knowledge Base','Note Organization','Long-form Writing','Writing Feedback'] },
+    { name: 'Research & Analysis', features: ['Research Assistant','Analysis','Educational Support','Research Tools','Technical Analysis','Problem Solving','Documentation','Citation Support','Real-time Search','Fact Checking'] },
+    { name: 'AI & Model Development', features: ['AI Safety','Model Training','Ethics Framework'] },
+    { name: 'Assessment & Feedback', features: ['Assessment Tools','Auto Grading','Feedback Generation','Assignment Analytics','Grade Management','Plagiarism Detection','Similarity Checking','Integration Tools','Progress Tracking','Progress Analytics'] },
+    { name: 'Learning & Tutoring', features: ['Lesson Planning','Resource Creation','Personalized Learning','Student Insights','Math Tutoring','Interactive Learning','Real-time Support'] },
+    { name: 'Speech & Accessibility', features: ['Text-to-Speech','Voice Customization','Document Reading','Multi-language Support'] }
+  ];
 
-featureSearchPanel.innerHTML = `
-  <h4 style="margin:0 0 10px 0;color:#6366f1;font-size:1.08rem;">Filter by Features</h4>
-  <form id="feature-checkbox-form">
-    ${allFeatures.map(f => `
-      <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:1rem;">
-        <input type="checkbox" name="feature" value="${f.replace(/"/g, '&quot;')}">
-        <span>${f}</span>
-      </label>
-    `).join('')}
-  </form>
-  <button id="display-feature-filter" style="margin-top:12px;width:100%;padding:8px 0;border-radius:6px;background:#6366f1;color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;">Display</button>
-`;
+  // Build the panel HTML (only larger categories)
+  let html = `<h4 style="margin:0 0 10px 0;color:#6366f1;font-size:1.08rem;">Filter by Feature Category</h4><form id="feature-category-form">`;
+  featureCategories.forEach(cat => {
+    html += `<label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:1rem;">
+      <input type="checkbox" name="featureCategory" value="${cat.name}">
+      <span>${cat.name}</span>
+    </label>`;
+  });
+  html += `<button id="display-feature-filter" style="margin-top:8px;width:100%;padding:8px 0;border-radius:6px;background:#6366f1;color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;">Display</button></form>`;
 
-document.body.appendChild(featureSearchPanel);
+  // Create and show the panel
+  const panel = document.createElement('div');
+  panel.id = 'feature-search-panel';
+  panel.style.position = 'fixed';
+  panel.style.top = '70px';
+  panel.style.left = '24px';
+  panel.style.background = 'rgba(255,255,255,0.98)';
+  panel.style.borderRadius = '12px';
+  panel.style.boxShadow = '0 4px 24px rgba(60,60,100,0.13)';
+  panel.style.padding = '18px 20px';
+  panel.style.zIndex = 200;
+  panel.style.minWidth = '260px';
+  panel.style.display = 'block';
+  panel.style.maxHeight = '60vh';
+  panel.style.overflowY = 'auto';
+  panel.innerHTML = html;
+  document.body.appendChild(panel);
 
-// Toggle feature search panel on search button click
-if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
-  toggleControlsBtn.onclick = function(e) {
-    e.stopPropagation();
-    featureSearchPanel.style.display = featureSearchPanel.style.display === 'none' ? 'block' : 'none';
-    // Remove any key container in the top left (feature search panel key)
-    const topLeftKey = document.querySelector('.feature-search-key, #feature-search-key');
-    if (topLeftKey) topLeftKey.remove();
+  // Filtering logic for category checkboxes
+  const displayBtn = panel.querySelector('#display-feature-filter');
+  displayBtn.onclick = function(e) {
+    e.preventDefault();
+    const checked = Array.from(panel.querySelectorAll('input[type=checkbox][name=featureCategory]:checked')).map(cb => cb.value);
+    if (checked.length === 0) {
+      nodes.style('display', '');
+      links.style('display', '');
+      return;
+    }
+    // Get all features for checked categories
+    const selectedFeatures = featureCategories.filter(cat => checked.includes(cat.name)).flatMap(cat => cat.features);
+    // Find node ids that match any selected feature
+    const matchingIds = data.nodes.filter(n => n.features.some(f => selectedFeatures.includes(f))).map(n => n.id);
+    nodes.each(function(d) {
+      d3.select(this).style('display', matchingIds.includes(d.id) ? '' : 'none');
+    });
+    links.style('display', function(d) {
+      return (matchingIds.includes(d.source.id) && matchingIds.includes(d.target.id)) ? '' : 'none';
+    });
   };
+
+  // Hide panel if clicking outside
+  setTimeout(() => {
+    window.addEventListener('click', function handler(e) {
+      if (!panel.contains(e.target) && e.target.id !== 'toggleControls') {
+        panel.remove();
+        window.removeEventListener('click', handler);
+      }
+    });
+  }, 0);
 }
 
-// Hide panel if clicking outside
-window.addEventListener('click', function(e) {
-  if (!featureSearchPanel.contains(e.target) && e.target !== toggleControlsBtn) {
-    featureSearchPanel.style.display = 'none';
-  }
-});
-
-// --- Feature Filtering Logic ---
-const originalNodeDisplay = new Map();
-nodes.each(function(d) {
-  originalNodeDisplay.set(d.id, d3.select(this).style('display'));
-});
-
-const displayBtn = featureSearchPanel.querySelector('#display-feature-filter');
-displayBtn.onclick = function(e) {
-  e.preventDefault();
-  const checked = Array.from(featureSearchPanel.querySelectorAll('input[type=checkbox][name=feature]:checked')).map(cb => cb.value);
-  if (checked.length === 0) {
-    // Show all nodes if nothing selected
-    nodes.style('display', '');
-    links.style('display', '');
-    return;
-  }
-  // Find node ids that match all selected features
-  const matchingIds = data.nodes.filter(n => checked.every(f => n.features.includes(f))).map(n => n.id);
-  // Show/hide nodes
-  nodes.each(function(d) {
-    d3.select(this).style('display', matchingIds.includes(d.id) ? '' : 'none');
+// Attach to Legend / Search button
+if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
+  toggleControlsBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    showFeatureSearchPanel();
   });
-  // Show only links where both source and target are visible
-  links.style('display', function(d) {
-    return (matchingIds.includes(d.source.id) && matchingIds.includes(d.target.id)) ? '' : 'none';
-  });
-};
+}
 
-// Remove /html/body/div[2] on page load
+// --- Remove /html/body/div[2] on page load ---
 window.addEventListener('DOMContentLoaded', function() {
   const divs = document.body.querySelectorAll('div');
   if (divs.length > 1) {

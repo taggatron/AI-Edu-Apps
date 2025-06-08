@@ -10,10 +10,13 @@
 <body>
   <div class="control-buttons">
     <button id="toggleControls" class="control-button">Legend / Search</button>
-    <button id="organizeQuadrants" class="control-button">Organize Quadrants</button>
+    <button id="organizeQuadrants" class="control-button">Agentic Systems</button>
   </div>
-  <div id="controls">
-    <input type="text" id="search" placeholder="Search nodes...">
+  <div id="controls" style="display:none;">
+    <div class="controls-title" style="font-weight:600;font-size:1.08rem;color:#6366f1;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+      <span role="img" aria-label="Search">🔍</span> Search for App Feature
+    </div>
+    <div id="feature-categories" style="margin-bottom:12px;"></div>
     <div id="legend">
       <div class="legend-item"><span class="dot image"></span>Image Creation</div>
       <div class="legend-item"><span class="dot llm"></span>LLM</div>
@@ -50,5 +53,71 @@
   </div>
   <div id="tooltip" class="tooltip"></div>
   <script src="script.js"></script>
+  <script>
+    // --- Feature Category Checkbox UI ---
+    window.addEventListener('DOMContentLoaded', function() {
+      const featureCategories = [
+        { name: 'Image & Art Creation', features: ['Image Generation','Style Transfer','Photo Editing','Art Creation','Art Generation','Style Customization','Design Tools','Creative Assistance','Custom Styles','Batch Processing','Image Synthesis'] },
+        { name: 'Video & Audio', features: ['Video Editing','Motion Generation','Text-to-Video','Music Creation','Audio Generation','Composition','Sound Design'] },
+        { name: 'Design & Collaboration', features: ['Design Templates','AI Magic Edit','Brand Kit','Collaboration','Team Collaboration'] },
+        { name: 'Text, Writing & Content', features: ['Text Generation','Code Assistant','Learning Support','Content Creation','AI Writing','Knowledge Base','Note Organization','Long-form Writing','Writing Feedback'] },
+        { name: 'Research & Analysis', features: ['Research Assistant','Analysis','Educational Support','Research Tools','Technical Analysis','Problem Solving','Documentation','Citation Support','Real-time Search','Fact Checking'] },
+        { name: 'AI & Model Development', features: ['AI Safety','Model Training','Ethics Framework'] },
+        { name: 'Assessment & Feedback', features: ['Assessment Tools','Auto Grading','Feedback Generation','Assignment Analytics','Grade Management','Plagiarism Detection','Similarity Checking','Integration Tools','Progress Tracking','Progress Analytics'] },
+        { name: 'Learning & Tutoring', features: ['Lesson Planning','Resource Creation','Personalized Learning','Student Insights','Math Tutoring','Interactive Learning','Real-time Support'] },
+        { name: 'Speech & Accessibility', features: ['Text-to-Speech','Voice Customization','Document Reading','Multi-language Support'] }
+      ];
+
+      // Only render checkboxes when controls panel is shown
+      const controlsPanel = document.getElementById('controls');
+      const featureCategoriesDiv = document.getElementById('feature-categories');
+      function renderFeatureCategories() {
+        if (featureCategoriesDiv) {
+          featureCategoriesDiv.innerHTML = featureCategories.map(cat => `
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:1rem;">
+              <input type="checkbox" class="feature-category-checkbox" value="${cat.name}">
+              <span>${cat.name}</span>
+            </label>
+          `).join('');
+        }
+        // Filtering logic for category checkboxes
+        const checkboxes = document.querySelectorAll('.feature-category-checkbox');
+        checkboxes.forEach(cb => {
+          cb.addEventListener('change', function() {
+            const checked = Array.from(document.querySelectorAll('.feature-category-checkbox:checked')).map(c => c.value);
+            if (checked.length === 0) {
+              if (window.nodes && window.nodes.style) window.nodes.style('display', '');
+              if (window.links && window.links.style) window.links.style('display', '');
+              return;
+            }
+            const selectedFeatures = featureCategories.filter(cat => checked.includes(cat.name)).flatMap(cat => cat.features);
+            const matchingIds = (window.data && window.data.nodes) ? window.data.nodes.filter(n => n.features.some(f => selectedFeatures.includes(f))).map(n => n.id) : [];
+            if (window.nodes && window.nodes.each) {
+              window.nodes.each(function(d) {
+                d3.select(this).style('display', matchingIds.includes(d.id) ? '' : 'none');
+              });
+            }
+            if (window.links && window.links.style) {
+              window.links.style('display', function(d) {
+                return (matchingIds.includes(d.source.id) && matchingIds.includes(d.target.id)) ? '' : 'none';
+              });
+            }
+          });
+        });
+      }
+
+      // Toggle controls panel and render checkboxes on button click
+      const toggleControlsBtn = document.getElementById('toggleControls');
+      if (toggleControlsBtn && controlsPanel) {
+        toggleControlsBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          controlsPanel.style.display = controlsPanel.style.display === 'none' ? 'block' : 'none';
+          if (controlsPanel.style.display === 'block') {
+            renderFeatureCategories();
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
