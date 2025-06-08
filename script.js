@@ -605,7 +605,7 @@ canvasKey.innerHTML = `
   <div class="canvas-key-row" data-group="Platform"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Platform)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Platform</div>
   <div class="canvas-key-row" data-group="Image"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Image)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Image Creation</div>
   <div class="canvas-key-row" data-group="Assessment"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Assessment)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Assessment</div>
-  <div class="canvas-key-row" data-cert="✓"><span style="display:inline-block;width:18px;text-align:center;color:green;font-weight:bold;">✓</span> Certified</div>
+  <div class="canvas-key-row" data-cert="✓"><span style="color:purple;font-weight:bold;">[</span><span style="display:inline-block;width:18px;text-align:center;color:green;font-weight:bold;">✓</span><span style="color:purple;font-weight:bold;">]</span> Certified</div>
   <div class="canvas-key-row" data-cert="✗"><span style="display:inline-block;width:18px;text-align:center;color:red;font-weight:bold;">✗</span> Not Certified</div>
   <div class="canvas-key-row" data-cert="?"><span style="display:inline-block;width:18px;text-align:center;color:orange;font-weight:bold;">?</span> Unknown</div>
 `;
