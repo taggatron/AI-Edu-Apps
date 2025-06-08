@@ -44,6 +44,10 @@ const data = {
       features: ["Code Generation", "AI Pair Programming", "Contextual Suggestions", "IDE Integration"],
       description: "AI-powered coding assistant for developers, integrated into IDEs.",
       gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
+    { id: "Microsoft Co-Pilot", group: "LLM",
+      features: ["Text Generation", "Enterprise Security", "Learning Support", "Content Creation"],
+      description: "Microsoft's AI assistant for productivity and enterprise, powered by GPT-4 with enterprise-grade protection.",
+      gdpr: "Yes", ukHosted: "Yes", ipSecurity: "Enterprise" },
 
     // Learning Platforms
     { id: "Teachermatic", group: "Platform", 
@@ -269,9 +273,9 @@ function getRandomStatus() {
 }
 
 // Add status to each node
-// SDC certified for Co-Pilot
+// SDC certified for Co-Pilot and Microsoft Co-Pilot
 data.nodes.forEach(node => {
-  if (node.id === 'Co-Pilot') {
+  if (node.id === 'Co-Pilot' || node.id === 'Microsoft Co-Pilot') {
     node.certStatus = '✓';
   } else {
     node.certStatus = getRandomStatus();
@@ -343,7 +347,8 @@ nodes.each(function(d) {
     'Teachermatic': 'logos/Teachermatic_logo.png',
     'Runway ML': 'logos/runway.svg',
     'Canva': 'logos/Canva App Logo.svg',
-    'Co-Pilot': 'logos/copilot-color.svg'
+    'Co-Pilot': 'logos/githubcopilot.svg',
+    'Microsoft Co-Pilot': 'logos/copilot-color.svg'
   };
   const logo = logoMap[d.id];
   if (logo) {
@@ -435,7 +440,8 @@ nodes.on("click", (event, d) => {
     'Teachermatic': 'logos/Teachermatic_logo.png',
     'Runway ML': 'logos/runway.svg',
     'Canva': 'logos/Canva App Logo.svg',
-    'Co-Pilot': 'logos/copilot-color.svg'
+    'Co-Pilot': 'logos/githubcopilot.svg',
+    'Microsoft Co-Pilot': 'logos/copilot-color.svg'
   };
   const logo = logoMap[d.id];
   // Remove any previous logo
@@ -478,7 +484,8 @@ nodes.on("click", (event, d) => {
     'Teachermatic': 'https://teachermatic.com/',
     'Runway ML': 'https://runwayml.com/',
     'Canva': 'https://www.canva.com/',
-    'Co-Pilot': 'https://github.com/features/copilot'
+    'Co-Pilot': 'https://github.com/features/copilot',
+    'Microsoft Co-Pilot': 'https://copilot.microsoft.com/'
   };
   // Insert web address below the title row and above SDC cert row
   let certDivLocal = d3.select('.info-panel .sdc-cert-status');
