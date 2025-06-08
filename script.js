@@ -40,7 +40,7 @@ const data = {
     { id: "Speechify", group: "LLM", 
       features: ["Text-to-Speech", "Voice Customization", "Document Reading", "Multi-language Support"],
       description: "AI text-to-speech and document reader", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
-    { id: "Co-Pilot", group: "LLM",
+    { id: "Github Co-Pilot", group: "LLM",
       features: ["Code Generation", "AI Pair Programming", "Contextual Suggestions", "IDE Integration"],
       description: "AI-powered coding assistant for developers, integrated into IDEs.",
       gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
@@ -93,9 +93,9 @@ const data = {
     { source: "Perplexity AI", target: "Claude", value: 0.7 },
     { source: "Speechify", target: "ChatGPT", value: 0.6 },
     { source: "Notion", target: "Speechify", value: 0.5 },
-    { source: "Co-Pilot", target: "ChatGPT", value: 0.8 },
-    { source: "Co-Pilot", target: "Claude", value: 0.7 },
-    { source: "Co-Pilot", target: "DeepSeek", value: 0.7 }
+    { source: "Github Co-Pilot", target: "ChatGPT", value: 0.8 },
+    { source: "Github Co-Pilot", target: "Claude", value: 0.7 },
+    { source: "Github Co-Pilot", target: "DeepSeek", value: 0.7 }
   ]
 };
 
@@ -273,9 +273,9 @@ function getRandomStatus() {
 }
 
 // Add status to each node
-// SDC certified for Co-Pilot and Microsoft Co-Pilot
+// SDC certified for Github Co-Pilot and Microsoft Co-Pilot
 data.nodes.forEach(node => {
-  if (node.id === 'Co-Pilot' || node.id === 'Microsoft Co-Pilot') {
+  if (node.id === 'Github Co-Pilot' || node.id === 'Microsoft Co-Pilot') {
     node.certStatus = '✓';
   } else {
     node.certStatus = getRandomStatus();
@@ -347,7 +347,7 @@ nodes.each(function(d) {
     'Teachermatic': 'logos/Teachermatic_logo.png',
     'Runway ML': 'logos/runway.svg',
     'Canva': 'logos/Canva App Logo.svg',
-    'Co-Pilot': 'logos/githubcopilot.svg',
+    'Github Co-Pilot': 'logos/githubcopilot.svg',
     'Microsoft Co-Pilot': 'logos/copilot-color.svg'
   };
   const logo = logoMap[d.id];
@@ -440,7 +440,7 @@ nodes.on("click", (event, d) => {
     'Teachermatic': 'logos/Teachermatic_logo.png',
     'Runway ML': 'logos/runway.svg',
     'Canva': 'logos/Canva App Logo.svg',
-    'Co-Pilot': 'logos/githubcopilot.svg',
+    'Github Co-Pilot': 'logos/githubcopilot.svg',
     'Microsoft Co-Pilot': 'logos/copilot-color.svg'
   };
   const logo = logoMap[d.id];
@@ -484,7 +484,7 @@ nodes.on("click", (event, d) => {
     'Teachermatic': 'https://teachermatic.com/',
     'Runway ML': 'https://runwayml.com/',
     'Canva': 'https://www.canva.com/',
-    'Co-Pilot': 'https://github.com/features/copilot',
+    'Github Co-Pilot': 'https://github.com/features/copilot',
     'Microsoft Co-Pilot': 'https://copilot.microsoft.com/'
   };
   // Insert web address below the title row and above SDC cert row
@@ -969,3 +969,14 @@ window.addEventListener('DOMContentLoaded', function() {
     divs[1].remove();
   }
 });
+
+// Update links referencing Co-Pilot
+const updatedLinks = [];
+data.links.forEach(link => {
+  let source = link.source;
+  let target = link.target;
+  if (source === 'Co-Pilot') source = 'Github Co-Pilot';
+  if (target === 'Co-Pilot') target = 'Github Co-Pilot';
+  updatedLinks.push({ ...link, source, target });
+});
+data.links = updatedLinks;
