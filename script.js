@@ -311,35 +311,45 @@ nodes.each(function(d) {
     .attr("width", bbox.width + 10)
     .attr("height", bbox.height + 10);
 
-  // Add image below text
-  g.append("image")
-    .attr("xlink:href", d => {
-      const logos = {
-        'DALL-E': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
-        'Runway ML': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/runkit.svg',
-        'Canva': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/canva.svg',
-        'ChatGPT': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
-        'Claude': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/anthropic.svg',
-        'Anthropic': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/anthropic.svg',
-        'Midjourney': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/midjourney.svg',
-        'DeepSeek': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
-        'SUNO': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/soundcloud.svg',
-        'Stable Diffusion': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/stability.svg',
-        'Notion': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/notion.svg',
-        'Perplexity AI': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/openai.svg',
-        'Speechify': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/soundcloud.svg',
-        'Century': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/powershell.svg',
-        'Third Space Learning': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/overleaf.svg',
-        'Gradescope': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/gradle.svg',
-        'Turnitin': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/checkmarx.svg',
-        'Teachermatic': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@develop/icons/teachable.svg'
-      }[d.id] || '';
-    })
-    .attr("x", -15)
-    .attr("y", 5)
-    .attr("width", 30)
-    .attr("height", 30)
-    .style("opacity", 0.8);
+  // Add image/logo inside the node
+  const logoMap = {
+    'Turnitin': 'logos/turnitin-logo.svg',
+    'Midjourney': 'logos/midjourney.svg',
+    'ChatGPT': 'logos/openai.svg',
+    'DALL-E': 'logos/openai.svg',
+    'Claude': 'logos/claude-color.svg',
+    'Anthropic': 'logos/anthropic.svg',
+    'DeepSeek': 'logos/deepseek-color.svg',
+    'SUNO': 'logos/suno.svg',
+    'Stable Diffusion': 'logos/stability-color.svg',
+    'Notion': 'logos/notion.svg',
+    'Perplexity AI': 'logos/perplexity-color.svg',
+    'Speechify': 'logos/suno.svg', // No speechify, use suno as fallback
+    'Century': 'logos/adobe-color.svg', // No century, use adobe as fallback
+    'Third Space Learning': 'logos/notebooklm.svg', // No TSL, use notebooklm as fallback
+    'Gradescope': 'logos/githubcopilot.svg', // No gradescope, use githubcopilot as fallback
+    'Teachermatic': 'logos/teachable.svg', // No teachermatic, use teachable as fallback
+    'Runway ML': 'logos/runway.svg',
+    'Canva': 'logos/adobe-color.svg' // No canva, use adobe as fallback
+  };
+  const logo = logoMap[d.id];
+  if (logo) {
+    g.append("image")
+      .attr("xlink:href", logo)
+      .attr("x", -28)
+      .attr("y", -16)
+      .attr("width", 56)
+      .attr("height", 32)
+      .style("opacity", 0.95);
+  } else {
+    g.append("image")
+      .attr("xlink:href", '')
+      .attr("x", -15)
+      .attr("y", 5)
+      .attr("width", 30)
+      .attr("height", 30)
+      .style("opacity", 0.8);
+  }
 });
 
 const tooltip = d3.select("#tooltip");
