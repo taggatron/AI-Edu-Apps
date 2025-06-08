@@ -40,6 +40,10 @@ const data = {
     { id: "Speechify", group: "LLM", 
       features: ["Text-to-Speech", "Voice Customization", "Document Reading", "Multi-language Support"],
       description: "AI text-to-speech and document reader", gdpr: "Yes", ukHosted: "No", ipSecurity: "High" },
+    { id: "Co-Pilot", group: "LLM",
+      features: ["Code Generation", "AI Pair Programming", "Contextual Suggestions", "IDE Integration"],
+      description: "AI-powered coding assistant for developers, integrated into IDEs.",
+      gdpr: "Yes", ukHosted: "No", ipSecurity: "Enterprise" },
 
     // Learning Platforms
     { id: "Teachermatic", group: "Platform", 
@@ -84,7 +88,10 @@ const data = {
     { source: "Perplexity AI", target: "ChatGPT", value: 0.9 },
     { source: "Perplexity AI", target: "Claude", value: 0.7 },
     { source: "Speechify", target: "ChatGPT", value: 0.6 },
-    { source: "Notion", target: "Speechify", value: 0.5 }
+    { source: "Notion", target: "Speechify", value: 0.5 },
+    { source: "Co-Pilot", target: "ChatGPT", value: 0.8 },
+    { source: "Co-Pilot", target: "Claude", value: 0.7 },
+    { source: "Co-Pilot", target: "DeepSeek", value: 0.7 }
   ]
 };
 
@@ -262,8 +269,13 @@ function getRandomStatus() {
 }
 
 // Add status to each node
+// SDC certified for Co-Pilot
 data.nodes.forEach(node => {
-  node.certStatus = getRandomStatus();
+  if (node.id === 'Co-Pilot') {
+    node.certStatus = '✓';
+  } else {
+    node.certStatus = getRandomStatus();
+  }
 });
 
 // Add images and text to nodes
@@ -316,7 +328,7 @@ nodes.each(function(d) {
     'Turnitin': 'logos/turnitin-logo.svg',
     'Midjourney': 'logos/midjourney.svg',
     'ChatGPT': 'logos/openai.svg',
-    'DALL-E': 'logos/openai.svg',
+    'DALL-E': 'logos/dalle-color.svg',
     'Claude': 'logos/claude-color.svg',
     'Anthropic': 'logos/anthropic.svg',
     'DeepSeek': 'logos/deepseek-color.svg',
@@ -324,13 +336,14 @@ nodes.each(function(d) {
     'Stable Diffusion': 'logos/stability-color.svg',
     'Notion': 'logos/notion.svg',
     'Perplexity AI': 'logos/perplexity-color.svg',
-    'Speechify': 'logos/suno.svg', // No speechify, use suno as fallback
-    'Century': 'logos/adobe-color.svg', // No century, use adobe as fallback
-    'Third Space Learning': 'logos/notebooklm.svg', // No TSL, use notebooklm as fallback
-    'Gradescope': 'logos/githubcopilot.svg', // No gradescope, use githubcopilot as fallback
-    'Teachermatic': 'logos/teachable.svg', // No teachermatic, use teachable as fallback
+    'Speechify': 'logos/speechify logo.svg',
+    'Century': 'logos/century-tech-logo.png', // Use correct Century logo
+    'Third Space Learning': 'logos/notebooklm.svg',
+    'Gradescope': 'logos/githubcopilot.svg',
+    'Teachermatic': 'logos/Teachermatic_logo.png',
     'Runway ML': 'logos/runway.svg',
-    'Canva': 'logos/adobe-color.svg' // No canva, use adobe as fallback
+    'Canva': 'logos/Canva App Logo.svg',
+    'Co-Pilot': 'logos/copilot-color.svg'
   };
   const logo = logoMap[d.id];
   if (logo) {
