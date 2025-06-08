@@ -463,8 +463,7 @@ nodes.on("click", (event, d) => {
       .style('background', '#fff');
   }
 
-  // --- Add web address below the title row and above SDC cert row ---
-  // Define web addresses for each app
+  // --- Make app title clickable to open web address ---
   const webMap = {
     'Turnitin': 'https://www.turnitin.com/',
     'Midjourney': 'https://www.midjourney.com/',
@@ -487,30 +486,31 @@ nodes.on("click", (event, d) => {
     'Github Co-Pilot': 'https://github.com/features/copilot',
     'Microsoft Co-Pilot': 'https://copilot.microsoft.com/'
   };
-  // Insert web address below the title row and above SDC cert row
-  let certDivLocal = d3.select('.info-panel .sdc-cert-status');
-  if (header.node() && webMap[d.id]) {
-    // Remove any previous info-web (already done above)
-    // Insert info-web div after the header, before certDiv
-    if (certDivLocal.node()) {
-      d3.select(certDivLocal.node().parentNode)
-        .insert('div', function() { return certDivLocal.node(); })
-        .attr('class', 'info-web')
-        .style('marginTop', '2px')
-        .style('marginBottom', '2px')
-        .style('fontSize', '0.98rem')
-        .style('color', '#2563eb')
-        .style('fontWeight', '500')
-        .append('a')
-        .attr('href', webMap[d.id])
-        .attr('target', '_blank')
-        .attr('rel', 'noopener noreferrer')
-        .style('color', '#2563eb')
-        .style('textDecoration', 'underline')
-        .style('font-size', '70%') // Reduce font size by 30%
-        .text(webMap[d.id]);
-    }
-  }
+  const appTitle = infoPanel.select(".app-title");
+  appTitle.text(d.id)
+    .style("cursor", webMap[d.id] ? "pointer" : "default")
+    .style("color", "")
+    .style("text-decoration", "")
+    .on("click", function() {
+      if (webMap[d.id]) {
+        window.open(webMap[d.id], '_blank', 'noopener');
+      }
+    })
+    .on("mouseover", function() {
+      if (webMap[d.id]) {
+        d3.select(this)
+          .style("color", "#2563eb")
+          .style("text-decoration", "underline");
+      }
+    })
+    .on("mouseout", function() {
+      d3.select(this)
+        .style("color", "")
+        .style("text-decoration", "");
+    });
+
+  // Remove any previous info-web (if present)
+  d3.select('.info-panel .info-web').remove();
 
   // Update info panel content
   infoPanel
