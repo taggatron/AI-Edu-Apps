@@ -382,6 +382,8 @@ if (!document.querySelector('.info-panel .close-btn')) {
   };
   const header = document.querySelector('.info-panel .info-header');
   if (header) header.appendChild(closeBtn);
+  // Reduce margin-bottom of info-header
+  header.style.marginBottom = '4px';
 }
 
 // Insert SDC certification status element if not present
@@ -406,13 +408,103 @@ function showInfoPanel() {
 // Update info panel show logic
 nodes.on("click", (event, d) => {
   event.stopPropagation();
-  
+
   // Get the color based on group
-  const categoryColor = d.group === "LLM" ? "#ff9999" : 
-                       d.group === "Platform" ? "#99ff99" : 
-                       d.group === "Image" ? "#2196F3" : 
+  const categoryColor = d.group === "LLM" ? "#ff9999" :
+                       d.group === "Platform" ? "#99ff99" :
+                       d.group === "Image" ? "#2196F3" :
                        "#9999ff";
-  
+
+  // --- Add logo to info panel title row ---
+  const logoMap = {
+    'Turnitin': 'logos/turnitin-logo.svg',
+    'Midjourney': 'logos/midjourney.svg',
+    'ChatGPT': 'logos/openai.svg',
+    'DALL-E': 'logos/dalle-color.svg',
+    'Claude': 'logos/claude-color.svg',
+    'Anthropic': 'logos/anthropic.svg',
+    'DeepSeek': 'logos/deepseek-color.svg',
+    'SUNO': 'logos/suno.svg',
+    'Stable Diffusion': 'logos/stability-color.svg',
+    'Notion': 'logos/notion.svg',
+    'Perplexity AI': 'logos/perplexity-color.svg',
+    'Speechify': 'logos/speechify logo.svg',
+    'Century': 'logos/century-tech-logo.png',
+    'Third Space Learning': 'logos/notebooklm.svg',
+    'Gradescope': 'logos/githubcopilot.svg',
+    'Teachermatic': 'logos/Teachermatic_logo.png',
+    'Runway ML': 'logos/runway.svg',
+    'Canva': 'logos/Canva App Logo.svg',
+    'Co-Pilot': 'logos/copilot-color.svg'
+  };
+  const logo = logoMap[d.id];
+  // Remove any previous logo
+  d3.select('.info-panel .info-logo').remove();
+  // Remove any previous web address
+  d3.select('.info-panel .info-web').remove();
+  // Insert logo at the start of the title row
+  const header = d3.select('.info-panel .info-header');
+  if (header.node() && logo) {
+    header.insert('img', ':first-child')
+      .attr('src', logo)
+      .attr('alt', d.id + ' logo')
+      .attr('class', 'info-logo')
+      .style('height', '32px')
+      .style('width', '32px')
+      .style('marginRight', '12px')
+      .style('verticalAlign', 'middle')
+      .style('borderRadius', '6px')
+      .style('background', '#fff');
+  }
+
+  // --- Add web address below the title row and above SDC cert row ---
+  // Define web addresses for each app
+  const webMap = {
+    'Turnitin': 'https://www.turnitin.com/',
+    'Midjourney': 'https://www.midjourney.com/',
+    'ChatGPT': 'https://chat.openai.com/',
+    'DALL-E': 'https://openai.com/dall-e/',
+    'Claude': 'https://claude.ai/',
+    'Anthropic': 'https://www.anthropic.com/',
+    'DeepSeek': 'https://deepseek.com/',
+    'SUNO': 'https://suno.ai/',
+    'Stable Diffusion': 'https://stability.ai/',
+    'Notion': 'https://www.notion.so/',
+    'Perplexity AI': 'https://www.perplexity.ai/',
+    'Speechify': 'https://speechify.com/',
+    'Century': 'https://www.century.tech/',
+    'Third Space Learning': 'https://thirdspacelearning.com/',
+    'Gradescope': 'https://www.gradescope.com/',
+    'Teachermatic': 'https://teachermatic.com/',
+    'Runway ML': 'https://runwayml.com/',
+    'Canva': 'https://www.canva.com/',
+    'Co-Pilot': 'https://github.com/features/copilot'
+  };
+  // Insert web address below the title row and above SDC cert row
+  let certDivLocal = d3.select('.info-panel .sdc-cert-status');
+  if (header.node() && webMap[d.id]) {
+    // Remove any previous info-web (already done above)
+    // Insert info-web div after the header, before certDiv
+    if (certDivLocal.node()) {
+      d3.select(certDivLocal.node().parentNode)
+        .insert('div', function() { return certDivLocal.node(); })
+        .attr('class', 'info-web')
+        .style('marginTop', '2px')
+        .style('marginBottom', '2px')
+        .style('fontSize', '0.98rem')
+        .style('color', '#2563eb')
+        .style('fontWeight', '500')
+        .append('a')
+        .attr('href', webMap[d.id])
+        .attr('target', '_blank')
+        .attr('rel', 'noopener noreferrer')
+        .style('color', '#2563eb')
+        .style('textDecoration', 'underline')
+        .style('font-size', '70%') // Reduce font size by 30%
+        .text(webMap[d.id]);
+    }
+  }
+
   // Update info panel content
   infoPanel
     .style("display", "block")
