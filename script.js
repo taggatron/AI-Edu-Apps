@@ -361,6 +361,19 @@ if (!document.querySelector('.info-panel .close-btn')) {
   if (header) header.appendChild(closeBtn);
 }
 
+// Insert SDC certification status element if not present
+if (!document.querySelector('.info-panel .sdc-cert-status')) {
+  const certDiv = document.createElement('div');
+  certDiv.className = 'sdc-cert-status';
+  certDiv.style.margin = '10px 0 0 0';
+  certDiv.style.fontWeight = 'bold';
+  certDiv.style.fontSize = '1.08rem';
+  const header = document.querySelector('.info-panel .info-header');
+  if (header && header.parentNode) {
+    header.parentNode.insertBefore(certDiv, header.nextSibling);
+  }
+}
+
 // Animate info panel appearance
 function showInfoPanel() {
   infoPanel.style('display', 'block');
@@ -388,6 +401,21 @@ nodes.on("click", (event, d) => {
     .text(d.group)
     .style("background-color", categoryColor)
     .style("color", "white");  // Make text white for better contrast
+
+  // --- SDC Certification Status ---
+  const certDiv = document.querySelector('.info-panel .sdc-cert-status');
+  if (certDiv) {
+    if (d.certStatus === '✓') {
+      certDiv.innerHTML = '<span class="cert-bracket">[</span><span class="cert-check">✓</span><span class="cert-bracket">]</span> SDC certified';
+      certDiv.className = 'sdc-cert-status certified';
+    } else if (d.certStatus === '✗') {
+      certDiv.innerHTML = '<span class="cert-x">✗</span> SDC Not certified';
+      certDiv.className = 'sdc-cert-status not-certified';
+    } else {
+      certDiv.innerHTML = '<span class="cert-unknown">?</span> SDC Certification Unknown';
+      certDiv.className = 'sdc-cert-status unknown';
+    }
+  }
 
   infoPanel
     .select(".app-description")

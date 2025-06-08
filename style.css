@@ -303,6 +303,37 @@ html, body {
   transition: width 0.5s cubic-bezier(.4,0,.2,1);
 }
 
+/* SDC Certification Status in Info Panel */
+.sdc-cert-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 1.08rem;
+  font-weight: bold;
+  letter-spacing: 0.01em;
+}
+.sdc-cert-status .cert-bracket {
+  color: #7c3aed;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.sdc-cert-status .cert-check {
+  color: #22c55e;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.sdc-cert-status .cert-x {
+  color: #b91c1c;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.sdc-cert-status .cert-unknown {
+  color: #b45309;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
 /* Table styles (if used) */
 table {
   border-collapse: collapse;
