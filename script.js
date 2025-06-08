@@ -405,12 +405,19 @@ nodes.on("click", (event, d) => {
   // --- SDC Certification Status ---
   const certDiv = document.querySelector('.info-panel .sdc-cert-status');
   if (certDiv) {
+    // Remove animation classes if present
+    certDiv.classList.remove('certified-animate', 'not-certified-animate');
     if (d.certStatus === '✓') {
       certDiv.innerHTML = '<span class="cert-bracket">[</span><span class="cert-check">✓</span><span class="cert-bracket">]</span> SDC certified';
       certDiv.className = 'sdc-cert-status certified';
+      // Add animation class for 5 seconds
+      setTimeout(() => certDiv.classList.remove('certified-animate'), 5000);
+      certDiv.classList.add('certified-animate');
     } else if (d.certStatus === '✗') {
       certDiv.innerHTML = '<span class="cert-x">✗</span> SDC Not certified';
       certDiv.className = 'sdc-cert-status not-certified';
+      setTimeout(() => certDiv.classList.remove('not-certified-animate'), 5000);
+      certDiv.classList.add('not-certified-animate');
     } else {
       certDiv.innerHTML = '<span class="cert-unknown">?</span> SDC Certification Unknown';
       certDiv.className = 'sdc-cert-status unknown';

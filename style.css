@@ -334,6 +334,72 @@ html, body {
   font-size: 1.1em;
 }
 
+.sdc-cert-status.certified {
+  position: relative;
+  z-index: 1;
+}
+.sdc-cert-status.certified.certified-animate .cert-check {
+  animation: certified-glow 1.2s infinite alternate cubic-bezier(.4,0,.2,1);
+  position: relative;
+  z-index: 2;
+}
+.sdc-cert-status.certified.certified-animate::before {
+  animation: certified-bg-pulse 2.2s infinite alternate cubic-bezier(.4,0,.2,1);
+}
+.sdc-cert-status.certified::before {
+  content: '';
+  position: absolute;
+  left: -12px; right: -12px; top: -8px; bottom: -8px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 60% 40%, #c4b5fd88 0%, #a78bfa33 60%, transparent 100%);
+  opacity: 0.7;
+  z-index: 0;
+  animation: certified-bg-pulse 2.2s infinite alternate cubic-bezier(.4,0,.2,1);
+}
+@keyframes certified-glow {
+  0% { text-shadow: 0 0 0px #a78bfa, 0 0 0px #22c55e; }
+  100% { text-shadow: 0 0 12px #a78bfa, 0 0 8px #22c55e; }
+}
+@keyframes certified-bg-pulse {
+  0% { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0.85; transform: scale(1.08); }
+}
+
+.sdc-cert-status.not-certified {
+  position: relative;
+  z-index: 1;
+}
+.sdc-cert-status.not-certified.not-certified-animate .cert-x {
+  animation: notcert-shake 0.7s infinite cubic-bezier(.4,0,.2,1);
+  position: relative;
+  z-index: 2;
+}
+.sdc-cert-status.not-certified.not-certified-animate::before {
+  animation: notcert-bg-pulse 1.5s infinite alternate cubic-bezier(.4,0,.2,1);
+}
+.sdc-cert-status.not-certified::before {
+  content: '';
+  position: absolute;
+  left: -12px; right: -12px; top: -8px; bottom: -8px;
+  border-radius: 12px;
+  background: repeating-linear-gradient(135deg, #fca5a544 0 8px, #f8717144 8px 16px);
+  opacity: 0.7;
+  z-index: 0;
+  animation: notcert-bg-pulse 1.5s infinite alternate cubic-bezier(.4,0,.2,1);
+}
+@keyframes notcert-shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-2px) rotate(-5deg); }
+  40% { transform: translateX(2px) rotate(5deg); }
+  60% { transform: translateX(-2px) rotate(-3deg); }
+  80% { transform: translateX(2px) rotate(3deg); }
+  100% { transform: translateX(0); }
+}
+@keyframes notcert-bg-pulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 0.85; }
+}
+
 /* Table styles (if used) */
 table {
   border-collapse: collapse;
