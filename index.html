@@ -8,9 +8,10 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <div class="control-buttons">
-    <button id="toggleControls" class="control-button">🔍 Search by Feature</button>
-    <button id="organizeQuadrants" class="control-button">Agentic Systems</button>
+  <div class="admin-bar" style="position:fixed;top:0;left:0;width:100vw;z-index:200;background:#f3f4f6;padding:8px 0 6px 0;display:flex;justify-content:flex-end;align-items:center;box-shadow:0 2px 8px rgba(60,60,100,0.07);gap:12px;">
+    <button id="toggleControls" class="control-button" style="margin-right:0;padding:7px 18px;font-size:1rem;font-weight:600;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;box-shadow:0 2px 8px rgba(60,60,100,0.07);">🔍 Search by Feature</button>
+    <button id="organizeQuadrants" class="control-button" style="margin-right:0;padding:7px 18px;font-size:1rem;font-weight:600;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;box-shadow:0 2px 8px rgba(60,60,100,0.07);">Agentic Systems</button>
+    <button id="adminBtn" style="margin-right:32px;padding:7px 18px;font-size:1rem;font-weight:600;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;box-shadow:0 2px 8px rgba(60,60,100,0.07);">Admin</button>
   </div>
   <div id="controls" style="display:none;">
     <div class="controls-title" style="font-weight:600;font-size:1.08rem;color:#6366f1;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
@@ -52,6 +53,16 @@
     </div>
   </div>
   <div id="tooltip" class="tooltip"></div>
+  <div id="admin-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:999;align-items:center;justify-content:center;">
+    <div id="admin-modal-content" style="background:#fff;padding:32px 28px 24px 28px;border-radius:14px;box-shadow:0 8px 32px rgba(60,60,100,0.18);min-width:340px;max-width:95vw;max-height:90vh;overflow-y:auto;position:relative;">
+      <button id="admin-modal-close" style="position:absolute;top:12px;right:12px;font-size:1.3rem;background:none;border:none;cursor:pointer;">✕</button>
+      <h2 style="margin-top:0;margin-bottom:18px;color:#6366f1;font-size:1.2rem;">Edit AI App Node</h2>
+      <label for="admin-app-select" style="font-weight:600;">Select App:</label>
+      <select id="admin-app-select" style="margin-bottom:18px;width:100%;padding:7px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;"></select>
+      <form id="admin-app-form"></form>
+      <button id="admin-save-btn" style="margin-top:18px;width:100%;padding:10px 0;border-radius:7px;background:#6366f1;color:#fff;font-weight:600;font-size:1rem;border:none;cursor:pointer;">Save Changes</button>
+    </div>
+  </div>
   <script src="script.js"></script>
   <script>
     // --- Feature Category Checkbox UI ---
@@ -118,6 +129,74 @@
         });
       }
     });
+
+    // Admin Modal Logic
+    const adminBtn = document.getElementById('adminBtn');
+    const adminModal = document.getElementById('admin-modal');
+    const adminModalContent = document.getElementById('admin-modal-content');
+    const adminModalClose = document.getElementById('admin-modal-close');
+    const adminAppSelect = document.getElementById('admin-app-select');
+    const adminAppForm = document.getElementById('admin-app-form');
+    const adminSaveBtn = document.getElementById('admin-save-btn');
+
+    // Populate app select dropdown
+    function populateAdminAppSelect() {
+      adminAppSelect.innerHTML = window.data.nodes.map(n => `<option value="${n.id}">${n.id}</option>`).join('');
+    }
+
+    // Render form for selected app
+    function renderAdminAppForm(appId) {
+      const node = window.data.nodes.find(n => n.id === appId);
+      if (!node) return;
+      adminAppForm.innerHTML = `
+        <label style="font-weight:600;">Name:<input name="id" value="${node.id}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">Group:<input name="group" value="${node.group}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">Description:<textarea name="description" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;">${node.description || ''}</textarea></label><br>
+        <label style="font-weight:600;">Features (comma separated):<input name="features" value="${(node.features||[]).join(', ')}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">GDPR:<input name="gdpr" value="${node.gdpr}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">UK Hosted:<input name="ukHosted" value="${node.ukHosted}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">Security:<input name="ipSecurity" value="${node.ipSecurity}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+      `;
+    }
+
+    // Show modal
+    adminBtn.onclick = function() {
+      populateAdminAppSelect();
+      renderAdminAppForm(adminAppSelect.value);
+      adminModal.style.display = 'flex';
+    };
+
+    // Hide modal
+    adminModalClose.onclick = function() {
+      adminModal.style.display = 'none';
+    };
+    adminModal.onclick = function(e) {
+      if (e.target === adminModal) adminModal.style.display = 'none';
+    };
+
+    // Change form when app changes
+    adminAppSelect.onchange = function() {
+      renderAdminAppForm(adminAppSelect.value);
+    };
+
+    // Save changes
+    adminSaveBtn.onclick = function(e) {
+      e.preventDefault();
+      const appId = adminAppSelect.value;
+      const node = window.data.nodes.find(n => n.id === appId);
+      if (!node) return;
+      const formData = new FormData(adminAppForm);
+      node.id = formData.get('id');
+      node.group = formData.get('group');
+      node.description = formData.get('description');
+      node.features = formData.get('features').split(',').map(f => f.trim()).filter(f => f);
+      node.gdpr = formData.get('gdpr');
+      node.ukHosted = formData.get('ukHosted');
+      node.ipSecurity = formData.get('ipSecurity');
+      adminModal.style.display = 'none';
+      // Optionally, trigger a re-render of the graph or info panel here
+      window.location.reload();
+    };
   </script>
 </body>
 </html>
