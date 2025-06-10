@@ -156,18 +156,18 @@
       ];
       adminAppForm.innerHTML = `
         <label style="font-weight:600;">Name:<input name="id" value="${node.id}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
-        <label style="font-weight:600;">Group:<input name="group" value="${node.group}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
-        <label style="font-weight:600;">Description:<textarea name="description" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;">${node.description || ''}</textarea></label><br>
-        <label style="font-weight:600;">Features (comma separated):<input name="features" value="${(node.features||[]).join(', ')}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
-        <label style="font-weight:600;">GDPR:<input name="gdpr" value="${node.gdpr}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
-        <label style="font-weight:600;">UK Hosted:<input name="ukHosted" value="${node.ukHosted}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
-        <label style="font-weight:600;">Security:<input name="ipSecurity" value="${node.ipSecurity}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
         <div style='display:flex;align-items:center;gap:10px;margin-bottom:10px;'><span style='font-weight:600;'>SDC certified:</span>
           <select name="certStatus" id="admin-cert-status" style="padding:5px 10px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;">
             ${certOptions.map(opt => `<option value='${opt.value}' style='${opt.style}' ${node.certStatus === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('')}
           </select>
           <span id="admin-cert-status-preview" style="font-size:1.2rem;${certOptions.find(o=>o.value===node.certStatus)?.style||''}">${node.certStatus||''}</span>
         </div>
+        <label style="font-weight:600;">Group:<input name="group" value="${node.group}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">Description:<textarea name="description" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;">${node.description || ''}</textarea></label><br>
+        <label style="font-weight:600;">Features (comma separated):<input name="features" value="${(node.features||[]).join(', ')}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">GDPR:<input name="gdpr" value="${node.gdpr}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">UK Hosted:<input name="ukHosted" value="${node.ukHosted}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <label style="font-weight:600;">Security:<input name="ipSecurity" value="${node.ipSecurity}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
       `;
       // Live preview of cert status color
       const certSelect = adminAppForm.querySelector('#admin-cert-status');
