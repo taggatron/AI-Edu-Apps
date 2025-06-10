@@ -8,11 +8,15 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <div class="admin-bar" style="position:fixed;top:0;left:0;width:100vw;z-index:200;background:#f3f4f6;padding:8px 0 6px 0;display:flex;justify-content:flex-end;align-items:center;box-shadow:0 2px 8px rgba(60,60,100,0.07);gap:12px;">
-    <button id="toggleControls" class="control-button" style="margin-right:0;padding:7px 18px;font-size:1rem;font-weight:600;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;box-shadow:0 2px 8px rgba(60,60,100,0.07);">🔍 Search by Feature</button>
-    <button id="organizeQuadrants" class="control-button" style="margin-right:0;padding:7px 18px;font-size:1rem;font-weight:600;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;box-shadow:0 2px 8px rgba(60,60,100,0.07);">Agentic Systems</button>
-    <button id="adminBtn" style="margin-right:32px;padding:7px 18px;font-size:1rem;font-weight:600;background:#6366f1;color:#fff;border:none;border-radius:7px;cursor:pointer;box-shadow:0 2px 8px rgba(60,60,100,0.07);">Admin</button>
-  </div>
+    <div class="admin-bar" style="position:fixed;top:0;left:0;width:100vw;z-index:200;background:#f3f4f6;padding:8px 0 6px 0;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(60,60,100,0.07);">
+      <div style="margin-left:32px;display:flex;gap:12px;">
+        <button id="toggleControls" class="control-button">🔍 Search by Feature</button>
+        <button id="organizeQuadrants" class="control-button">Agentic Systems</button>
+      </div>
+      <div style="margin-right:32px;">
+        <button id="adminBtn" class="control-button">Admin</button>
+      </div>
+    </div>
   <div id="controls" style="display:none;">
     <div class="controls-title" style="font-weight:600;font-size:1.08rem;color:#6366f1;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
       <span role="img" aria-label="Search">🔍</span> Search for App Feature
@@ -120,6 +124,7 @@
       // Toggle controls panel and render checkboxes on button click
       const toggleControlsBtn = document.getElementById('toggleControls');
       if (toggleControlsBtn && controlsPanel) {
+        // Remove any duplicate event listeners by only attaching one
         toggleControlsBtn.addEventListener('click', function(e) {
           e.stopPropagation();
           controlsPanel.style.display = controlsPanel.style.display === 'none' ? 'block' : 'none';

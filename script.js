@@ -962,14 +962,6 @@ if (typeof toggleControlsBtn !== 'undefined' && toggleControlsBtn) {
   });
 }
 
-// --- Remove /html/body/div[2] on page load ---
-window.addEventListener('DOMContentLoaded', function() {
-  const divs = document.body.querySelectorAll('div');
-  if (divs.length > 1) {
-    divs[1].remove();
-  }
-});
-
 // Update links referencing Co-Pilot
 const updatedLinks = [];
 data.links.forEach(link => {
