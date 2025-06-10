@@ -980,3 +980,10 @@ data.links.forEach(link => {
   updatedLinks.push({ ...link, source, target });
 });
 data.links = updatedLinks;
+
+// Make data globally accessible for admin modal
+window.data = data;
+
+// Make nodes and links globally accessible for feature search panel
+window.nodes = nodes;
+window.links = links;

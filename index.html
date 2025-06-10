@@ -148,6 +148,12 @@
     function renderAdminAppForm(appId) {
       const node = window.data.nodes.find(n => n.id === appId);
       if (!node) return;
+      // SDC cert dropdown options with color styling
+      const certOptions = [
+        { value: '✓', label: '✓', style: 'color:green;font-weight:bold;' },
+        { value: '✗', label: '✗', style: 'color:red;font-weight:bold;' },
+        { value: '?', label: '?', style: 'color:orange;font-weight:bold;' }
+      ];
       adminAppForm.innerHTML = `
         <label style="font-weight:600;">Name:<input name="id" value="${node.id}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
         <label style="font-weight:600;">Group:<input name="group" value="${node.group}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
@@ -156,7 +162,21 @@
         <label style="font-weight:600;">GDPR:<input name="gdpr" value="${node.gdpr}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
         <label style="font-weight:600;">UK Hosted:<input name="ukHosted" value="${node.ukHosted}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
         <label style="font-weight:600;">Security:<input name="ipSecurity" value="${node.ipSecurity}" style="width:100%;margin-bottom:10px;padding:6px 8px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;" /></label><br>
+        <div style='display:flex;align-items:center;gap:10px;margin-bottom:10px;'><span style='font-weight:600;'>SDC certified:</span>
+          <select name="certStatus" id="admin-cert-status" style="padding:5px 10px;border-radius:6px;border:1.5px solid #e0e7ff;font-size:1rem;">
+            ${certOptions.map(opt => `<option value='${opt.value}' style='${opt.style}' ${node.certStatus === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('')}
+          </select>
+          <span id="admin-cert-status-preview" style="font-size:1.2rem;${certOptions.find(o=>o.value===node.certStatus)?.style||''}">${node.certStatus||''}</span>
+        </div>
       `;
+      // Live preview of cert status color
+      const certSelect = adminAppForm.querySelector('#admin-cert-status');
+      const certPreview = adminAppForm.querySelector('#admin-cert-status-preview');
+      certSelect.addEventListener('change', function() {
+        const selected = certOptions.find(o => o.value === this.value);
+        certPreview.textContent = selected.label;
+        certPreview.setAttribute('style', `font-size:1.2rem;${selected.style}`);
+      });
     }
 
     // Show modal
@@ -193,8 +213,8 @@
       node.gdpr = formData.get('gdpr');
       node.ukHosted = formData.get('ukHosted');
       node.ipSecurity = formData.get('ipSecurity');
+      node.certStatus = formData.get('certStatus');
       adminModal.style.display = 'none';
-      // Optionally, trigger a re-render of the graph or info panel here
       window.location.reload();
     };
   </script>
