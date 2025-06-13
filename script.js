@@ -973,6 +973,220 @@ data.links.forEach(link => {
 });
 data.links = updatedLinks;
 
+// --- App Grid Layout ---
+const graphContainer = document.getElementById('graph-container');
+const appGrid = document.createElement('div');
+appGrid.id = 'app-grid';
+appGrid.style.display = 'grid';
+appGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
+appGrid.style.gap = '24px';
+appGrid.style.padding = '40px 32px 32px 32px';
+appGrid.style.marginTop = '80px';
+appGrid.style.maxWidth = '1200px';
+appGrid.style.marginLeft = 'auto';
+appGrid.style.marginRight = 'auto';
+appGrid.style.zIndex = 10;
+appGrid.style.position = 'relative';
+appGrid.style.background = 'none';
+
+// Hide the graph container by default, show grid
+graphContainer.style.display = 'none';
+appGrid.style.display = 'grid';
+
+function renderAppGrid(apps) {
+  appGrid.innerHTML = '';
+  const logoMap = {
+    'Turnitin': 'logos/turnitin-logo.svg',
+    'Midjourney': 'logos/midjourney.svg',
+    'ChatGPT': 'logos/openai.svg',
+    'DALL-E': 'logos/dalle-color.svg',
+    'Claude': 'logos/claude-color.svg',
+    'Anthropic': 'logos/anthropic.svg',
+    'DeepSeek': 'logos/deepseek-color.svg',
+    'SUNO': 'logos/suno.svg',
+    'Stable Diffusion': 'logos/stability-color.svg',
+    'Notion': 'logos/notion.svg',
+    'Perplexity AI': 'logos/perplexity-color.svg',
+    'Speechify': 'logos/speechify logo.svg',
+    'Century': 'logos/century-tech-logo.png',
+    'Third Space Learning': 'logos/notebooklm.svg',
+    'Gradescope': 'logos/githubcopilot.svg',
+    'Teachermatic': 'logos/Teachermatic_logo.png',
+    'Runway ML': 'logos/runway.svg',
+    'Canva': 'logos/Canva App Logo.svg',
+    'Github Co-Pilot': 'logos/githubcopilot.svg',
+    'Microsoft Co-Pilot': 'logos/copilot-color.svg'
+  };
+  apps.forEach(app => {
+    const card = document.createElement('div');
+    card.className = 'app-card';
+    card.style.background = '#fff';
+    card.style.borderRadius = '18px';
+    card.style.boxShadow = '0 2px 16px rgba(60,60,100,0.09)';
+    card.style.padding = '22px 18px 16px 18px';
+    card.style.display = 'flex';
+    card.style.flexDirection = 'column';
+    card.style.alignItems = 'center';
+    card.style.cursor = 'pointer';
+    card.style.transition = 'box-shadow 0.18s, transform 0.18s';
+    card.style.position = 'relative';
+    card.onmouseover = () => { card.style.boxShadow = '0 6px 24px rgba(60,60,100,0.16)'; card.style.transform = 'translateY(-2px) scale(1.03)'; };
+    card.onmouseout = () => { card.style.boxShadow = '0 2px 16px rgba(60,60,100,0.09)'; card.style.transform = 'none'; };
+    card.onclick = (e) => {
+      e.stopPropagation();
+      // Simulate node click to open info panel
+      const d = app;
+      const event = new Event('click', { bubbles: true });
+      nodes.filter(nd => nd.id === d.id).dispatch('click', { detail: d });
+    };
+    // Logo
+    const logo = document.createElement('img');
+    logo.src = logoMap[app.id] || '';
+    logo.alt = app.id + ' logo';
+    logo.style.width = '48px';
+    logo.style.height = '48px';
+    logo.style.objectFit = 'contain';
+    logo.style.marginBottom = '10px';
+    logo.style.borderRadius = '10px';
+    card.appendChild(logo);
+    // Name
+    const name = document.createElement('div');
+    name.textContent = app.id;
+    name.style.fontWeight = '700';
+    name.style.fontSize = '1.13rem';
+    name.style.marginBottom = '4px';
+    card.appendChild(name);
+    // Group
+    const group = document.createElement('div');
+    group.textContent = app.group;
+    group.style.fontSize = '0.98rem';
+    group.style.color = '#6366f1';
+    group.style.marginBottom = '6px';
+    card.appendChild(group);
+    // Short description
+    const desc = document.createElement('div');
+    desc.textContent = app.description;
+    desc.style.fontSize = '0.97rem';
+    desc.style.color = '#444';
+    desc.style.textAlign = 'center';
+    desc.style.marginBottom = '8px';
+    card.appendChild(desc);
+    // Features (first 2)
+    if (app.features && app.features.length) {
+      const features = document.createElement('div');
+      features.style.display = 'flex';
+      features.style.flexWrap = 'wrap';
+      features.style.gap = '6px';
+      features.style.justifyContent = 'center';
+      app.features.slice(0,2).forEach(f => {
+        const badge = document.createElement('span');
+        badge.textContent = f;
+        badge.style.background = '#f0f4ff';
+        badge.style.color = '#6366f1';
+        badge.style.fontSize = '0.92rem';
+        badge.style.padding = '2px 10px';
+        badge.style.borderRadius = '7px';
+        features.appendChild(badge);
+      });
+      card.appendChild(features);
+    }
+    appGrid.appendChild(card);
+  });
+}
+
+// Insert app grid after the graph container
+graphContainer.parentNode.insertBefore(appGrid, graphContainer.nextSibling);
+renderAppGrid(data.nodes);
+
+// --- Node View Button Logic ---
+// Add Node View button to menu bar if not present
+let nodeViewBtn = document.getElementById('nodeViewBtn');
+if (!nodeViewBtn) {
+  nodeViewBtn = document.createElement('button');
+  nodeViewBtn.id = 'nodeViewBtn';
+  nodeViewBtn.className = 'control-button';
+  nodeViewBtn.textContent = 'Node View';
+  // Insert into left button group in menu bar
+  const leftBtnGroup = document.querySelector('.admin-bar > div');
+  if (leftBtnGroup) leftBtnGroup.appendChild(nodeViewBtn);
+}
+
+nodeViewBtn.onclick = function() {
+  // Toggle grid and graph
+  if (graphContainer.style.display === 'none') {
+    graphContainer.style.display = 'block';
+    appGrid.style.display = 'none';
+  } else {
+    graphContainer.style.display = 'none';
+    appGrid.style.display = 'grid';
+  }
+};
+
+// --- Key Selectors and Search Filtering for Grid ---
+function filterGrid() {
+  let filtered = data.nodes;
+  // Key selector (by group)
+  if (window.activeKeyGroup) {
+    filtered = filtered.filter(n => n.group === window.activeKeyGroup);
+  }
+  // Key selector (by cert)
+  if (window.activeCertStatus) {
+    filtered = filtered.filter(n => n.certStatus === window.activeCertStatus);
+  }
+  // Feature search selector
+  if (window.selectedFeatures && window.selectedFeatures.length) {
+    filtered = filtered.filter(n => n.features && n.features.some(f => window.selectedFeatures.includes(f)));
+  }
+  renderAppGrid(filtered);
+}
+
+// Patch key selectors to filter grid
+window.activeKeyGroup = null;
+window.activeCertStatus = null;
+window.selectedFeatures = [];
+
+// Patch key selector event handlers
+setTimeout(() => {
+  // Key group
+  document.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
+    row.onclick = function(e) {
+      e.stopPropagation();
+      window.activeKeyGroup = this.getAttribute('data-group');
+      window.activeCertStatus = null;
+      document.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      this.classList.add('active');
+      filterGrid();
+    };
+  });
+  // Key cert
+  document.querySelectorAll('.canvas-key-row[data-cert]').forEach(row => {
+    row.onclick = function(e) {
+      e.stopPropagation();
+      window.activeCertStatus = this.getAttribute('data-cert');
+      window.activeKeyGroup = null;
+      document.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      this.classList.add('active');
+      filterGrid();
+    };
+  });
+  // Reset filter if clicking outside
+  window.addEventListener('click', function(e) {
+    if (!e.target.closest('.canvas-key-row')) {
+      window.activeKeyGroup = null;
+      window.activeCertStatus = null;
+      document.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      filterGrid();
+    }
+  });
+  // Feature search selector
+  document.querySelectorAll('.feature-category-checkbox').forEach(cb => {
+    cb.addEventListener('change', function() {
+      window.selectedFeatures = Array.from(document.querySelectorAll('.feature-category-checkbox:checked')).map(c => c.value);
+      filterGrid();
+    });
+  });
+}, 500);
+
 // Make data globally accessible for admin modal
 window.data = data;
 

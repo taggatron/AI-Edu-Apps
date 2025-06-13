@@ -12,6 +12,7 @@
       <div style="margin-left:32px;display:flex;gap:12px;">
         <button id="toggleControls" class="control-button">🔍 Search by Feature</button>
         <button id="organizeQuadrants" class="control-button">Agentic Systems</button>
+        <button id="nodeViewBtn" class="control-button">Node View</button>
       </div>
       <div style="margin-right:32px;">
         <button id="adminBtn" class="control-button">Admin</button>
@@ -29,7 +30,7 @@
       <div class="legend-item"><span class="dot assessment"></span>Assessment</div>
     </div>
   </div>
-  <div id="graph-container"></div>
+  <div id="graph-container" style="display:none;"></div>
   <div id="info-panel" class="info-panel">
     <div class="info-header">
       <h2 class="app-title"></h2>
@@ -222,6 +223,21 @@
       adminModal.style.display = 'none';
       window.location.reload();
     };
+
+    // --- Node View Logic ---
+    window.addEventListener('DOMContentLoaded', function() {
+      // Hide graph, show grid by default
+      document.getElementById('graph-container').style.display = 'none';
+      var appGrid = document.getElementById('app-grid');
+      if (appGrid) appGrid.style.display = 'grid';
+      // Node View button logic
+      var nodeViewBtn = document.getElementById('nodeViewBtn');
+      nodeViewBtn.addEventListener('click', function() {
+        document.getElementById('graph-container').style.display = '';
+        var appGrid = document.getElementById('app-grid');
+        if (appGrid) appGrid.style.display = 'none';
+      });
+    });
   </script>
 </body>
 </html>
