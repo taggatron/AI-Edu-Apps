@@ -138,10 +138,18 @@ feMerge.append("feMergeNode")
 feMerge.append("feMergeNode")
   .attr("in", "SourceGraphic");
 
+// --- Node and Grid View Gradient Definitions ---
+const groupGradientMap = {
+  'LLM': 'url(#gradient-LLM)',
+  'Platform': 'url(#gradient-Platform)',
+  'Image': 'url(#gradient-Image)',
+  'Assessment': 'url(#gradient-Assessment)'
+};
+
 // Add gradient definitions for 3D shading effect
 const gradients = [
   { id: 'LLM', color: '#ff9999' },
-  { id: 'Platform', color: '#99ff99' },
+  { id: 'Platform', color: '#4ade80' }, // More saturated green for Platform
   { id: 'Image', color: '#2196F3' },
   { id: 'Assessment', color: '#9999ff' }
 ];
@@ -156,9 +164,14 @@ gradients.forEach(gradient => {
     .attr("fy", "40%")
     .attr("gradientUnits", "objectBoundingBox");
 
+  // Defensive: fallback to original color if d3.color returns null
+  const baseColor = d3.color(gradient.color);
+  const brighter = baseColor ? baseColor.brighter(1.5).formatHex() : gradient.color;
+  const darker = baseColor ? baseColor.darker(1.2).formatHex() : gradient.color;
+
   grad.append("stop")
     .attr("offset", "0%")
-    .attr("stop-color", d3.color(gradient.color).brighter(1.5).formatHex())
+    .attr("stop-color", brighter)
     .attr("stop-opacity", 0.85);
   grad.append("stop")
     .attr("offset", "60%")
@@ -166,7 +179,7 @@ gradients.forEach(gradient => {
     .attr("stop-opacity", 0.7);
   grad.append("stop")
     .attr("offset", "100%")
-    .attr("stop-color", d3.color(gradient.color).darker(1.2).formatHex())
+    .attr("stop-color", darker)
     .attr("stop-opacity", 0.55);
 });
 
@@ -758,10 +771,10 @@ const canvasKey = document.createElement('div');
 canvasKey.id = 'canvas-key';
 canvasKey.innerHTML = `
   <h4>Key</h4>
-  <div class="canvas-key-row" data-group="LLM"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-LLM)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> LLM</div>
-  <div class="canvas-key-row" data-group="Platform"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Platform)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Platform</div>
-  <div class="canvas-key-row" data-group="Image"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Image)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Image Creation</div>
-  <div class="canvas-key-row" data-group="Assessment"><svg width="22" height="22"><circle cx="11" cy="11" r="10" fill="url(#gradient-Assessment)" style="filter:url(#drop-shadow);opacity:0.85;"/></svg> Assessment</div>
+  <div class="canvas-key-row" data-group="LLM"><div class="key-swatch node-bg-LLM"></div> LLM</div>
+  <div class="canvas-key-row" data-group="Platform"><div class="key-swatch node-bg-Platform"></div> Platform</div>
+  <div class="canvas-key-row" data-group="Image"><div class="key-swatch node-bg-Image"></div> Image Creation</div>
+  <div class="canvas-key-row" data-group="Assessment"><div class="key-swatch node-bg-Assessment"></div> Assessment</div>
   <div class="canvas-key-row" data-cert="✓"><span style="color:purple;font-weight:bold;">[</span><span style="display:inline-block;width:18px;text-align:center;color:green;font-weight:bold;">✓</span><span style="color:purple;font-weight:bold;">]</span> Certified</div>
   <div class="canvas-key-row" data-cert="✗"><span style="display:inline-block;width:18px;text-align:center;color:red;font-weight:bold;">✗</span> Not Certified</div>
   <div class="canvas-key-row" data-cert="?"><span style="display:inline-block;width:18px;text-align:center;color:orange;font-weight:bold;">?</span> Unknown</div>
@@ -993,6 +1006,18 @@ appGrid.style.background = 'none';
 graphContainer.style.display = 'none';
 appGrid.style.display = 'grid';
 
+const groupBgMap = {
+  'LLM': 'linear-gradient(135deg, #ffb3b3 0%, #ff9999 100%)',
+  'Platform': 'linear-gradient(135deg, #b3ffb3 0%, #99ff99 100%)',
+  'Image': 'linear-gradient(135deg, #6ec6ff 0%, #2196F3 100%)',
+  'Assessment': 'linear-gradient(135deg, #b3b3ff 0%, #9999ff 100%)'
+};
+
+// Make the app grid container scrollable and full height minus header
+appGrid.style.overflowY = 'auto';
+appGrid.style.height = 'calc(100vh - 60px)'; // header is ~60px
+appGrid.style.marginTop = '60px'; // match header height
+
 function renderAppGrid(apps) {
   appGrid.innerHTML = '';
   const logoMap = {
@@ -1019,8 +1044,8 @@ function renderAppGrid(apps) {
   };
   apps.forEach(app => {
     const card = document.createElement('div');
-    card.className = 'app-card';
-    card.style.background = '#fff';
+    card.className = `app-card node-bg-${app.group}`; // Add group-based background class
+    card.style.position = 'relative';
     card.style.borderRadius = '18px';
     card.style.boxShadow = '0 2px 16px rgba(60,60,100,0.09)';
     card.style.padding = '22px 18px 16px 18px';
@@ -1029,7 +1054,6 @@ function renderAppGrid(apps) {
     card.style.alignItems = 'center';
     card.style.cursor = 'pointer';
     card.style.transition = 'box-shadow 0.18s, transform 0.18s';
-    card.style.position = 'relative';
     card.onmouseover = () => { card.style.boxShadow = '0 6px 24px rgba(60,60,100,0.16)'; card.style.transform = 'translateY(-2px) scale(1.03)'; };
     card.onmouseout = () => { card.style.boxShadow = '0 2px 16px rgba(60,60,100,0.09)'; card.style.transform = 'none'; };
     card.onclick = (e) => {
@@ -1063,6 +1087,20 @@ function renderAppGrid(apps) {
     group.style.color = '#6366f1';
     group.style.marginBottom = '6px';
     card.appendChild(group);
+    // SDC certified status
+    const cert = document.createElement('div');
+    cert.className = 'sdc-cert-status';
+    cert.style.fontWeight = 'bold';
+    cert.style.fontSize = '1.08rem';
+    cert.style.marginBottom = '6px';
+    if (app.certStatus === '✓') {
+      cert.innerHTML = '<span style="color:purple;font-weight:bold;">[</span><span style="color:green;font-weight:bold;">✓</span><span style="color:purple;font-weight:bold;">]</span> <span style="color:#2563eb;">SDC certified</span>';
+    } else if (app.certStatus === '✗') {
+      cert.innerHTML = '<span style="color:red;font-weight:bold;">✗</span> <span style="color:#b91c1c;">Not certified</span>';
+    } else {
+      cert.innerHTML = '<span style="color:orange;font-weight:bold;">?</span> <span style="color:#f59e42;">Unknown</span>';
+    }
+    card.appendChild(cert);
     // Short description
     const desc = document.createElement('div');
     desc.textContent = app.description;
@@ -1112,13 +1150,15 @@ if (!nodeViewBtn) {
 }
 
 nodeViewBtn.onclick = function() {
-  // Toggle grid and graph
+  // Toggle graph and grid views
   if (graphContainer.style.display === 'none') {
     graphContainer.style.display = 'block';
     appGrid.style.display = 'none';
+    nodeViewBtn.textContent = 'Grid View'; // Update button text
   } else {
     graphContainer.style.display = 'none';
     appGrid.style.display = 'grid';
+    nodeViewBtn.textContent = 'Node View'; // Update button text
   }
 };
 
@@ -1193,3 +1233,47 @@ window.data = data;
 // Make nodes and links globally accessible for feature search panel
 window.nodes = nodes;
 window.links = links;
+
+// Add CSS for node backgrounds (only once)
+if (!document.getElementById('node-bg-styles')) {
+  const style = document.createElement('style');
+  style.id = 'node-bg-styles';
+  style.innerHTML = `
+    .node-bg-LLM {
+      background: radial-gradient(circle at 40% 40%, #ffb3b3 0%, #ff9999 60%, #d46a6a 100%);
+    }
+    .node-bg-Platform {
+      background: radial-gradient(circle at 40% 40%, #7fffd4 0%, #4ade80 60%, #1eae60 100%);
+    }
+    .node-bg-Image {
+      background: radial-gradient(circle at 40% 40%, #6ec6ff 0%, #2196F3 60%, #0b3c6e 100%);
+    }
+    .node-bg-Assessment {
+      background: radial-gradient(circle at 40% 40%, #b3b3ff 0%, #9999ff 60%, #5a5ad1 100%);
+    }
+    .app-card {
+      background-clip: padding-box;
+      border-radius: 18px;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Add key swatch CSS if not present
+if (!document.getElementById('key-swatch-styles')) {
+  const style = document.createElement('style');
+  style.id = 'key-swatch-styles';
+  style.innerHTML = `
+    .key-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-right: 7px;
+      vertical-align: middle;
+      box-shadow: 0 1px 4px rgba(60,60,100,0.10);
+      border: 1.5px solid #e0e7ff;
+    }
+  `;
+  document.head.appendChild(style);
+}
