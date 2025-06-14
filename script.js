@@ -1043,10 +1043,24 @@ function renderAppGrid(apps) {
     'Microsoft Co-Pilot': 'logos/copilot-color.svg'
   };
   apps.forEach(app => {
+    // Main app container (no fill background)
+    const appContainer = document.createElement('div');
+    appContainer.className = 'app-card-outer';
+    appContainer.style.display = 'flex';
+    appContainer.style.flexDirection = 'column';
+    appContainer.style.alignItems = 'center';
+    appContainer.style.background = 'none';
+    appContainer.style.boxShadow = 'none';
+    appContainer.style.border = 'none';
+    appContainer.style.padding = '0';
+    appContainer.style.margin = '0';
+    appContainer.style.width = '100%';
+
+    // Coloured app card container
     const card = document.createElement('div');
-    card.className = `app-card node-bg-${app.group}`; // Add group-based background class
+    card.className = `app-card node-bg-${app.group}`;
     card.style.position = 'relative';
-    card.style.borderRadius = '18px';
+    card.style.borderRadius = '18px 18px 0 0';
     card.style.boxShadow = '0 2px 16px rgba(60,60,100,0.09)';
     card.style.padding = '22px 18px 16px 18px';
     card.style.display = 'flex';
@@ -1087,20 +1101,6 @@ function renderAppGrid(apps) {
     group.style.color = '#6366f1';
     group.style.marginBottom = '6px';
     card.appendChild(group);
-    // SDC certified status
-    const cert = document.createElement('div');
-    cert.className = 'sdc-cert-status';
-    cert.style.fontWeight = 'bold';
-    cert.style.fontSize = '1.08rem';
-    cert.style.marginBottom = '6px';
-    if (app.certStatus === '✓') {
-      cert.innerHTML = '<span style="color:purple;font-weight:bold;">[</span><span style="color:green;font-weight:bold;">✓</span><span style="color:purple;font-weight:bold;">]</span> <span style="color:#2563eb;">SDC certified</span>';
-    } else if (app.certStatus === '✗') {
-      cert.innerHTML = '<span style="color:red;font-weight:bold;">✗</span> <span style="color:#b91c1c;">Not certified</span>';
-    } else {
-      cert.innerHTML = '<span style="color:orange;font-weight:bold;">?</span> <span style="color:#f59e42;">Unknown</span>';
-    }
-    card.appendChild(cert);
     // Short description
     const desc = document.createElement('div');
     desc.textContent = app.description;
@@ -1128,7 +1128,34 @@ function renderAppGrid(apps) {
       });
       card.appendChild(features);
     }
-    appGrid.appendChild(card);
+    // App status container (below the coloured card)
+    const statusContainer = document.createElement('div');
+    statusContainer.className = 'app-status-container';
+    statusContainer.style.width = '100%';
+    statusContainer.style.background = '#fff';
+    statusContainer.style.borderRadius = '0 0 18px 18px';
+    statusContainer.style.boxShadow = '0 2px 8px rgba(60,60,100,0.04)';
+    statusContainer.style.marginTop = '0';
+    statusContainer.style.padding = '10px 0 8px 0';
+    statusContainer.style.textAlign = 'center';
+    const cert = document.createElement('div');
+    cert.className = 'sdc-cert-status';
+    cert.style.fontWeight = 'bold';
+    cert.style.fontSize = '1.08rem';
+    cert.style.margin = '0';
+    cert.style.textAlign = 'center';
+    if (app.certStatus === '✓') {
+      cert.innerHTML = '<span style="color:purple;font-weight:bold;">[</span><span style="color:green;font-weight:bold;">✓</span><span style="color:purple;font-weight:bold;">]</span> <span style="color:#2563eb;">SDC certified</span>';
+    } else if (app.certStatus === '✗') {
+      cert.innerHTML = '<span style="color:red;font-weight:bold;">✗</span> <span style="color:#b91c1c;">Not certified</span>';
+    } else {
+      cert.innerHTML = '<span style="color:orange;font-weight:bold;">?</span> <span style="color:#f59e42;">Unknown</span>';
+    }
+    statusContainer.appendChild(cert);
+    // Compose containers
+    appContainer.appendChild(card);
+    appContainer.appendChild(statusContainer);
+    appGrid.appendChild(appContainer);
   });
 }
 
