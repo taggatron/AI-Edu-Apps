@@ -766,11 +766,12 @@ organizeQuadrentsBtn.addEventListener('click', () => {
   }, 3000);
 });
 
-// Add a floating key/legend to the main canvas (graph-container)
-const canvasKey = document.createElement('div');
-canvasKey.id = 'canvas-key';
-canvasKey.innerHTML = `
-  <h4>Key</h4>
+// Remove the floating key/legend from the main canvas (graph-container)
+// and move its creation and functionality to the bottom of the screen, all items in a single row
+// --- Key/Legend at Bottom ---
+const bottomKey = document.createElement('div');
+bottomKey.id = 'bottom-key';
+bottomKey.innerHTML = `
   <div class="canvas-key-row" data-group="LLM"><div class="key-swatch node-bg-LLM"></div> LLM</div>
   <div class="canvas-key-row" data-group="Platform"><div class="key-swatch node-bg-Platform"></div> Platform</div>
   <div class="canvas-key-row" data-group="Image"><div class="key-swatch node-bg-Image"></div> Image Creation</div>
@@ -779,51 +780,63 @@ canvasKey.innerHTML = `
   <div class="canvas-key-row" data-cert="✗"><span style="display:inline-block;width:18px;text-align:center;color:red;font-weight:bold;">✗</span> Not Certified</div>
   <div class="canvas-key-row" data-cert="?"><span style="display:inline-block;width:18px;text-align:center;color:orange;font-weight:bold;">?</span> Unknown</div>
 `;
-canvasKey.style.position = 'fixed';
-canvasKey.style.bottom = '24px';
-canvasKey.style.right = '24px';
-canvasKey.style.background = 'rgba(255,255,255,0.95)';
-canvasKey.style.borderRadius = '10px';
-canvasKey.style.boxShadow = '0 4px 24px rgba(60,60,100,0.13)';
-canvasKey.style.padding = '18px 20px 14px 20px';
-canvasKey.style.zIndex = 120;
-canvasKey.style.fontSize = '1rem';
-canvasKey.style.minWidth = '120px';
-canvasKey.style.pointerEvents = 'auto';
-canvasKey.style.userSelect = 'none';
-canvasKey.style.transition = 'box-shadow 0.2s';
-canvasKey.style.border = '1.5px solid #e0e7ff';
-canvasKey.style.backdropFilter = 'blur(4px)';
-canvasKey.querySelector('h4').style.margin = '0 0 10px 0';
-canvasKey.querySelector('h4').style.fontSize = '1.08rem';
-canvasKey.querySelector('h4').style.color = '#6366f1';
+bottomKey.style.position = 'fixed';
+bottomKey.style.left = '50%';
+bottomKey.style.bottom = '0';
+bottomKey.style.transform = 'translateX(-50%)';
+bottomKey.style.background = 'rgba(255,255,255,0.97)';
+bottomKey.style.borderRadius = '12px 12px 0 0';
+bottomKey.style.boxShadow = '0 -2px 16px rgba(60,60,100,0.10)';
+bottomKey.style.padding = '10px 24px 8px 24px';
+bottomKey.style.zIndex = 200;
+bottomKey.style.fontSize = '1rem';
+bottomKey.style.minWidth = '120px';
+bottomKey.style.pointerEvents = 'auto';
+bottomKey.style.userSelect = 'none';
+bottomKey.style.transition = 'box-shadow 0.2s';
+bottomKey.style.border = '1.5px solid #e0e7ff';
+bottomKey.style.backdropFilter = 'blur(4px)';
+bottomKey.style.display = 'flex';
+bottomKey.style.flexDirection = 'row';
+bottomKey.style.alignItems = 'center';
+bottomKey.style.gap = '18px';
+document.body.appendChild(bottomKey);
 
-document.body.appendChild(canvasKey);
-
-// Add key rows styling
+// Add key rows styling (reuse existing style block if needed)
 const style = document.createElement('style');
 style.innerHTML = `
-  .canvas-key-row {
+  #bottom-key .canvas-key-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 0;
     font-size: 1rem;
     cursor: pointer;
     user-select: none;
     border-radius: 6px;
     transition: background 0.2s;
+    padding: 4px 10px;
   }
-  .canvas-key-row.active {
+  #bottom-key .canvas-key-row.active {
     background: #e0e7ff;
   }
+  #bottom-key .key-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  #bottom-key .node-bg-LLM { background: linear-gradient(135deg, #ffb3b3 0%, #ffd6d6 100%); }
+  #bottom-key .node-bg-Platform { background: linear-gradient(135deg, #aaffb3 0%, #d6ffe0 100%); }
+  #bottom-key .node-bg-Image { background: linear-gradient(135deg, #7faaff 0%, #b3c6ff 100%); }
+  #bottom-key .node-bg-Assessment { background: linear-gradient(135deg, #b3b3ff 0%, #e0e0ff 100%); }
 `;
 document.head.appendChild(style);
 
-// --- Key Filtering Functionality ---
+// --- Key Filtering Functionality (moved from floating legend) ---
 let activeKeyGroup = null;
 let activeCertStatus = null;
-canvasKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
+bottomKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
   row.addEventListener('click', function(e) {
     e.stopPropagation();
     const group = this.getAttribute('data-group');
@@ -831,7 +844,7 @@ canvasKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
       // Reset filter
       nodes.style('display', '');
       links.style('display', '');
-      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      bottomKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       activeKeyGroup = null;
     } else {
       // Filter nodes/links
@@ -841,15 +854,14 @@ canvasKey.querySelectorAll('.canvas-key-row[data-group]').forEach(row => {
       links.style('display', function(d) {
         return (d.source.group === group && d.target.group === group) ? '' : 'none';
       });
-      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      bottomKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       this.classList.add('active');
       activeKeyGroup = group;
       activeCertStatus = null;
     }
   });
 });
-// Certification status filtering
-canvasKey.querySelectorAll('.canvas-key-row[data-cert]').forEach(row => {
+bottomKey.querySelectorAll('.canvas-key-row[data-cert]').forEach(row => {
   row.addEventListener('click', function(e) {
     e.stopPropagation();
     const cert = this.getAttribute('data-cert');
@@ -857,7 +869,7 @@ canvasKey.querySelectorAll('.canvas-key-row[data-cert]').forEach(row => {
       // Reset filter
       nodes.style('display', '');
       links.style('display', '');
-      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      bottomKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       activeCertStatus = null;
     } else {
       // Filter nodes/links by cert status
@@ -867,20 +879,19 @@ canvasKey.querySelectorAll('.canvas-key-row[data-cert]').forEach(row => {
       links.style('display', function(d) {
         return (d.source.certStatus === cert && d.target.certStatus === cert) ? '' : 'none';
       });
-      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      bottomKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       this.classList.add('active');
       activeCertStatus = cert;
       activeKeyGroup = null;
     }
   });
 });
-// Reset filter if clicking outside the key
 window.addEventListener('click', function(e) {
-  if (!canvasKey.contains(e.target)) {
+  if (!bottomKey.contains(e.target)) {
     if (activeKeyGroup || activeCertStatus) {
       nodes.style('display', '');
       links.style('display', '');
-      canvasKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
+      bottomKey.querySelectorAll('.canvas-key-row').forEach(r => r.classList.remove('active'));
       activeKeyGroup = null;
       activeCertStatus = null;
     }
