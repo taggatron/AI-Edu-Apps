@@ -816,6 +816,8 @@ style.innerHTML = `
     border-radius: 6px;
     transition: background 0.2s;
     padding: 4px 10px;
+    min-width: 120px;
+    justify-content: center;
   }
   #bottom-key .canvas-key-row.active {
     background: #e0e7ff;
@@ -830,6 +832,17 @@ style.innerHTML = `
   #bottom-key .node-bg-Platform { background: linear-gradient(135deg, #aaffb3 0%, #d6ffe0 100%); }
   #bottom-key .node-bg-Image { background: linear-gradient(135deg, #7faaff 0%, #b3c6ff 100%); }
   #bottom-key .node-bg-Assessment { background: linear-gradient(135deg, #b3b3ff 0%, #e0e0ff 100%); }
+  #bottom-key > div:nth-child(3) > div {
+    min-width: 16px;
+    width: 16px;
+    max-width: 16px;
+  }
+  #bottom-key > div:nth-child(4) > div {
+    min-width: 16px;
+    width: 16px;
+    max-width: 16px;
+  }
+    
 `;
 document.head.appendChild(style);
 
@@ -1142,13 +1155,21 @@ function renderAppGrid(apps) {
     // App status container (below the coloured card)
     const statusContainer = document.createElement('div');
     statusContainer.className = 'app-status-container';
-    statusContainer.style.width = '100%';
+    statusContainer.style.width = appContainer.offsetWidth ? appContainer.offsetWidth + 'px' : '100%';
     statusContainer.style.background = '#fff';
     statusContainer.style.borderRadius = '0 0 18px 18px';
     statusContainer.style.boxShadow = '0 2px 8px rgba(60,60,100,0.04)';
     statusContainer.style.marginTop = '0';
     statusContainer.style.padding = '10px 0 8px 0';
     statusContainer.style.textAlign = 'center';
+    statusContainer.style.boxSizing = 'border-box';
+    statusContainer.style.alignSelf = 'stretch';
+    // Ensure width matches app-card-outer on resize
+    new ResizeObserver(entries => {
+      for (let entry of entries) {
+        statusContainer.style.width = entry.contentRect.width + 'px';
+      }
+    }).observe(appContainer);
     const cert = document.createElement('div');
     cert.className = 'sdc-cert-status';
     cert.style.fontWeight = 'bold';
