@@ -1,53 +1,448 @@
 {
   "nodes": [
-    { "id": "DALL-E", "group": "LLM", "description": "AI image generation by OpenAI", "features": ["Image Generation", "Style Transfer", "Photo Editing", "Art Creation"], "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "Enterprise", "certStatus": "✗" },
-    { "id": "Runway ML", "group": "Platform", "features": ["Video Editing", "Motion Generation", "Image Synthesis", "Text-to-Video"], "description": "AI-powered creative tools for video and image editing", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Canva", "group": "Platform", "features": ["Design Templates", "AI Magic Edit", "Brand Kit", "Collaboration"], "description": "Design platform with AI-powered features", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "ChatGPT", "group": "LLM", "features": ["Text Generation", "Code Assistant", "Learning Support", "Content Creation"], "description": "Conversational AI for education support and content generation", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "Enterprise", "certStatus": "✗" },
-    { "id": "Claude", "group": "LLM", "features": ["Research Assistant", "Long-form Writing", "Analysis", "Educational Support"], "description": "Advanced AI assistant for research and writing", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "Enterprise", "certStatus": "✗" },
-    { "id": "Anthropic", "group": "Platform", "features": ["AI Safety", "Research Tools", "Model Training", "Ethics Framework"], "description": "AI research company and creator of Claude", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "Enterprise", "certStatus": "✗" },
-    { "id": "Midjourney", "group": "Image", "features": ["Art Generation", "Style Customization", "Design Tools", "Creative Assistance"], "description": "AI image generation focused on artistic quality", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "DeepSeek", "group": "LLM", "features": ["Code Generation", "Technical Analysis", "Problem Solving", "Documentation"], "description": "Advanced language model for coding and analysis", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "SUNO", "group": "LLM", "features": ["Music Creation", "Audio Generation", "Composition", "Sound Design"], "description": "AI music generation and composition", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Stable Diffusion", "group": "Image", "features": ["Image Generation", "Model Training", "Custom Styles", "Batch Processing"], "description": "AI image generation and editing", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Notion", "group": "Platform", "features": ["Note Organization", "AI Writing", "Knowledge Base", "Team Collaboration"], "description": "AI-enhanced workspace and note-taking platform", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Perplexity AI", "group": "LLM", "features": ["Research Assistant", "Citation Support", "Real-time Search", "Fact Checking"], "description": "AI-powered search and research assistant", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Speechify", "group": "LLM", "features": ["Text-to-Speech", "Voice Customization", "Document Reading", "Multi-language Support"], "description": "AI text-to-speech and document reader", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Github Co-Pilot", "group": "LLM", "features": ["Code Generation", "AI Pair Programming", "Contextual Suggestions", "IDE Integration"], "description": "AI-powered coding assistant for developers, integrated into IDEs.", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "Enterprise", "certStatus": "✗" },
-    { "id": "Microsoft Co-Pilot", "group": "LLM", "features": ["Text Generation", "Enterprise Security", "Learning Support", "Content Creation"], "description": "Microsoft's AI assistant for productivity and enterprise, powered by GPT-4 with enterprise-grade protection.", "gdpr": "Yes", "ukHosted": "Yes", "ipSecurity": "Enterprise", "certStatus": "✗" },
-    { "id": "Teachermatic", "group": "Platform", "features": ["Lesson Planning", "Resource Creation", "Assessment Tools", "Progress Tracking"], "description": "AI-powered teaching assistant and lesson planning tool", "gdpr": "Yes", "ukHosted": "Yes", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Century", "group": "Platform", "features": ["Personalized Learning", "Progress Analytics", "Content Creation", "Student Insights"], "description": "Adaptive learning platform using AI", "gdpr": "Yes", "ukHosted": "Yes", "ipSecurity": "Advanced", "certStatus": "✗" },
-    { "id": "Third Space Learning", "group": "Platform", "features": ["Math Tutoring", "Progress Tracking", "Interactive Learning", "Real-time Support"], "description": "AI-powered math tutoring platform", "gdpr": "Yes", "ukHosted": "Yes", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Gradescope", "group": "Assessment", "features": ["Auto Grading", "Feedback Generation", "Assignment Analytics", "Grade Management"], "description": "AI-assisted grading and feedback", "gdpr": "Yes", "ukHosted": "No", "ipSecurity": "High", "certStatus": "✗" },
-    { "id": "Turnitin", "group": "Assessment", "features": ["Plagiarism Detection", "Writing Feedback", "Similarity Checking", "Integration Tools"], "description": "AI-powered plagiarism detection", "gdpr": "Yes", "ukHosted": "Yes", "ipSecurity": "Enterprise", "certStatus": "✗" }
+    {
+      "id": "DALL-E",
+      "group": "LLM",
+      "description": "AI image generation by OpenAI",
+      "features": [
+        "Image Generation",
+        "Style Transfer",
+        "Photo Editing",
+        "Art Creation"
+      ],
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✓",
+      "index": 0,
+      "x": 1059.0969863293465,
+      "y": 645,
+      "vy": 1.518149827292095,
+      "vx": -0.2021496583033552,
+      "scale": 0.9235737278945502,
+      "scaleDirection": 1
+    },
+    {
+      "id": "Runway ML",
+      "group": "Platform",
+      "features": [
+        "Video Editing",
+        "Motion Generation",
+        "Image Synthesis",
+        "Text-to-Video"
+      ],
+      "description": "AI-powered creative tools for video and image editing",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Canva",
+      "group": "Platform",
+      "features": [
+        "Design Templates",
+        "AI Magic Edit",
+        "Brand Kit",
+        "Collaboration"
+      ],
+      "description": "Design platform with AI-powered features",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "ChatGPT",
+      "group": "LLM",
+      "features": [
+        "Text Generation",
+        "Code Assistant",
+        "Learning Support",
+        "Content Creation"
+      ],
+      "description": "Conversational AI for education support and content generation",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Claude",
+      "group": "LLM",
+      "features": [
+        "Research Assistant",
+        "Long-form Writing",
+        "Analysis",
+        "Educational Support"
+      ],
+      "description": "Advanced AI assistant for research and writing",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Anthropic",
+      "group": "Platform",
+      "features": [
+        "AI Safety",
+        "Research Tools",
+        "Model Training",
+        "Ethics Framework"
+      ],
+      "description": "AI research company and creator of Claude",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Midjourney",
+      "group": "Image",
+      "features": [
+        "Art Generation",
+        "Style Customization",
+        "Design Tools",
+        "Creative Assistance"
+      ],
+      "description": "AI image generation focused on artistic quality",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "DeepSeek",
+      "group": "LLM",
+      "features": [
+        "Code Generation",
+        "Technical Analysis",
+        "Problem Solving",
+        "Documentation"
+      ],
+      "description": "Advanced language model for coding and analysis",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "SUNO",
+      "group": "LLM",
+      "features": [
+        "Music Creation",
+        "Audio Generation",
+        "Composition",
+        "Sound Design"
+      ],
+      "description": "AI music generation and composition",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Stable Diffusion",
+      "group": "Image",
+      "features": [
+        "Image Generation",
+        "Model Training",
+        "Custom Styles",
+        "Batch Processing"
+      ],
+      "description": "AI image generation and editing",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Notion",
+      "group": "Platform",
+      "features": [
+        "Note Organization",
+        "AI Writing",
+        "Knowledge Base",
+        "Team Collaboration"
+      ],
+      "description": "AI-enhanced workspace and note-taking platform",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Perplexity AI",
+      "group": "LLM",
+      "features": [
+        "Research Assistant",
+        "Citation Support",
+        "Real-time Search",
+        "Fact Checking"
+      ],
+      "description": "AI-powered search and research assistant",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Speechify",
+      "group": "LLM",
+      "features": [
+        "Text-to-Speech",
+        "Voice Customization",
+        "Document Reading",
+        "Multi-language Support"
+      ],
+      "description": "AI text-to-speech and document reader",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Github Co-Pilot",
+      "group": "LLM",
+      "features": [
+        "Code Generation",
+        "AI Pair Programming",
+        "Contextual Suggestions",
+        "IDE Integration"
+      ],
+      "description": "AI-powered coding assistant for developers, integrated into IDEs.",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Microsoft Co-Pilot",
+      "group": "LLM",
+      "features": [
+        "Text Generation",
+        "Enterprise Security",
+        "Learning Support",
+        "Content Creation"
+      ],
+      "description": "Microsoft's AI assistant for productivity and enterprise, powered by GPT-4 with enterprise-grade protection.",
+      "gdpr": "Yes",
+      "ukHosted": "Yes",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Teachermatic",
+      "group": "Platform",
+      "features": [
+        "Lesson Planning",
+        "Resource Creation",
+        "Assessment Tools",
+        "Progress Tracking"
+      ],
+      "description": "AI-powered teaching assistant and lesson planning tool",
+      "gdpr": "Yes",
+      "ukHosted": "Yes",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Century",
+      "group": "Platform",
+      "features": [
+        "Personalized Learning",
+        "Progress Analytics",
+        "Content Creation",
+        "Student Insights"
+      ],
+      "description": "Adaptive learning platform using AI",
+      "gdpr": "Yes",
+      "ukHosted": "Yes",
+      "ipSecurity": "Advanced",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Third Space Learning",
+      "group": "Platform",
+      "features": [
+        "Math Tutoring",
+        "Progress Tracking",
+        "Interactive Learning",
+        "Real-time Support"
+      ],
+      "description": "AI-powered math tutoring platform",
+      "gdpr": "Yes",
+      "ukHosted": "Yes",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Gradescope",
+      "group": "Assessment",
+      "features": [
+        "Auto Grading",
+        "Feedback Generation",
+        "Assignment Analytics",
+        "Grade Management"
+      ],
+      "description": "AI-assisted grading and feedback",
+      "gdpr": "Yes",
+      "ukHosted": "No",
+      "ipSecurity": "High",
+      "certStatus": "✗"
+    },
+    {
+      "id": "Turnitin",
+      "group": "Assessment",
+      "features": [
+        "Plagiarism Detection",
+        "Writing Feedback",
+        "Similarity Checking",
+        "Integration Tools"
+      ],
+      "description": "AI-powered plagiarism detection",
+      "gdpr": "Yes",
+      "ukHosted": "Yes",
+      "ipSecurity": "Enterprise",
+      "certStatus": "✗"
+    }
   ],
   "links": [
-    { "source": "DALL-E", "target": "Stable Diffusion", "value": 0.9 },
-    { "source": "DALL-E", "target": "Midjourney", "value": 0.8 },
-    { "source": "Runway ML", "target": "DALL-E", "value": 0.7 },
-    { "source": "Runway ML", "target": "Stable Diffusion", "value": 0.8 },
-    { "source": "Canva", "target": "DALL-E", "value": 0.6 },
-    { "source": "Canva", "target": "Stable Diffusion", "value": 0.5 },
-    { "source": "ChatGPT", "target": "Claude", "value": 0.8 },
-    { "source": "Century", "target": "Third Space Learning", "value": 0.6 },
-    { "source": "Gradescope", "target": "Turnitin", "value": 0.9 },
-    { "source": "ChatGPT", "target": "Century", "value": 0.4 },
-    { "source": "Claude", "target": "Turnitin", "value": 0.5 },
-    { "source": "SUNO", "target": "ChatGPT", "value": 0.7 },
-    { "source": "Stable Diffusion", "target": "SUNO", "value": 0.6 },
-    { "source": "Anthropic", "target": "Claude", "value": 0.9 },
-    { "source": "Midjourney", "target": "Stable Diffusion", "value": 0.8 },
-    { "source": "DeepSeek", "target": "ChatGPT", "value": 0.7 },
-    { "source": "DeepSeek", "target": "Claude", "value": 0.6 },
-    { "source": "Teachermatic", "target": "ChatGPT", "value": 0.7 },
-    { "source": "Teachermatic", "target": "Century", "value": 0.5 },
-    { "source": "Notion", "target": "ChatGPT", "value": 0.8 },
-    { "source": "Perplexity AI", "target": "ChatGPT", "value": 0.9 },
-    { "source": "Perplexity AI", "target": "Claude", "value": 0.7 },
-    { "source": "Speechify", "target": "ChatGPT", "value": 0.6 },
-    { "source": "Notion", "target": "Speechify", "value": 0.5 },
-    { "source": "Github Co-Pilot", "target": "ChatGPT", "value": 0.8 },
-    { "source": "Github Co-Pilot", "target": "Claude", "value": 0.7 },
-    { "source": "Github Co-Pilot", "target": "DeepSeek", "value": 0.7 }
+    {
+      "source": "DALL-E",
+      "target": "Stable Diffusion",
+      "value": 0.9
+    },
+    {
+      "source": "DALL-E",
+      "target": "Midjourney",
+      "value": 0.8
+    },
+    {
+      "source": "Runway ML",
+      "target": "DALL-E",
+      "value": 0.7
+    },
+    {
+      "source": "Runway ML",
+      "target": "Stable Diffusion",
+      "value": 0.8
+    },
+    {
+      "source": "Canva",
+      "target": "DALL-E",
+      "value": 0.6
+    },
+    {
+      "source": "Canva",
+      "target": "Stable Diffusion",
+      "value": 0.5
+    },
+    {
+      "source": "ChatGPT",
+      "target": "Claude",
+      "value": 0.8
+    },
+    {
+      "source": "Century",
+      "target": "Third Space Learning",
+      "value": 0.6
+    },
+    {
+      "source": "Gradescope",
+      "target": "Turnitin",
+      "value": 0.9
+    },
+    {
+      "source": "ChatGPT",
+      "target": "Century",
+      "value": 0.4
+    },
+    {
+      "source": "Claude",
+      "target": "Turnitin",
+      "value": 0.5
+    },
+    {
+      "source": "SUNO",
+      "target": "ChatGPT",
+      "value": 0.7
+    },
+    {
+      "source": "Stable Diffusion",
+      "target": "SUNO",
+      "value": 0.6
+    },
+    {
+      "source": "Anthropic",
+      "target": "Claude",
+      "value": 0.9
+    },
+    {
+      "source": "Midjourney",
+      "target": "Stable Diffusion",
+      "value": 0.8
+    },
+    {
+      "source": "DeepSeek",
+      "target": "ChatGPT",
+      "value": 0.7
+    },
+    {
+      "source": "DeepSeek",
+      "target": "Claude",
+      "value": 0.6
+    },
+    {
+      "source": "Teachermatic",
+      "target": "ChatGPT",
+      "value": 0.7
+    },
+    {
+      "source": "Teachermatic",
+      "target": "Century",
+      "value": 0.5
+    },
+    {
+      "source": "Notion",
+      "target": "ChatGPT",
+      "value": 0.8
+    },
+    {
+      "source": "Perplexity AI",
+      "target": "ChatGPT",
+      "value": 0.9
+    },
+    {
+      "source": "Perplexity AI",
+      "target": "Claude",
+      "value": 0.7
+    },
+    {
+      "source": "Speechify",
+      "target": "ChatGPT",
+      "value": 0.6
+    },
+    {
+      "source": "Notion",
+      "target": "Speechify",
+      "value": 0.5
+    },
+    {
+      "source": "Github Co-Pilot",
+      "target": "ChatGPT",
+      "value": 0.8
+    },
+    {
+      "source": "Github Co-Pilot",
+      "target": "Claude",
+      "value": 0.7
+    },
+    {
+      "source": "Github Co-Pilot",
+      "target": "DeepSeek",
+      "value": 0.7
+    }
   ]
 }

@@ -248,11 +248,6 @@ window.addEventListener('DOMContentLoaded', async function() {
     .style("fill", "url(#glass-highlight-gradient)")
     .style("pointer-events", "none");
 
-  // Remove random assignment and set all to not certified
-  window.data.nodes.forEach(node => {
-    node.certStatus = '✗';
-  });
-
   // Add images and text to nodes
   nodes.each(function(d) {
     const g = d3.select(this);
