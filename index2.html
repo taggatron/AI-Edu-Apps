@@ -206,7 +206,7 @@
     };
 
     // Save changes
-    adminSaveBtn.onclick = function(e) {
+    adminSaveBtn.onclick = async function(e) {
       e.preventDefault();
       const appId = adminAppSelect.value;
       const node = window.data.nodes.find(n => n.id === appId);
@@ -221,6 +221,10 @@
       node.ipSecurity = formData.get('ipSecurity');
       node.certStatus = formData.get('certStatus');
       adminModal.style.display = 'none';
+      // Persist to backend
+      if (typeof saveNodeToBackend === 'function') {
+        await saveNodeToBackend(node);
+      }
       window.location.reload();
     };
 
