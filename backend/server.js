@@ -2,10 +2,14 @@ import express from "express";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_FILE = path.join(__dirname, "data.json");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const DATA_FILE = path.resolve("./backend/data.json");
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +26,12 @@ function readData() {
 
 // Helper to write data
 function writeData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch (e) {
+    console.error("Failed to write data.json:", e);
+    throw e;
+  }
 }
 
 // GET all data
