@@ -23,7 +23,53 @@ async function saveNodeToBackend(node) {
 window.addEventListener('DOMContentLoaded', async function() {
   // Fetch data from backend
   const backendData = await fetchData();
-  window.data = backendData;
+
+  // --- Data Normalization for Flexible Backend Format ---
+  function normalizeNode(node) {
+    // Map alternative field names to expected ones
+    const id = node.id || node.name || node.title;
+    const group = node.group || node.category || node.type;
+    const description = node.description || node.desc || node.summary || '';
+    let features = node.features || node.feature || [];
+    if (typeof features === 'string') features = features.split(',').map(f => f.trim()).filter(f => f);
+    const gdpr = node.gdpr || node.GDPR || node.gdprCompliant || '';
+    const ukHosted = node.ukHosted || node.uk_hosted || node.hostedUK || '';
+    const ipSecurity = node.ipSecurity || node.security || node.ip_security || '';
+    const certStatus = node.certStatus || node.cert_status || node.certified || '';
+    return {
+      ...node,
+      id,
+      group,
+      description,
+      features,
+      gdpr,
+      ukHosted,
+      ipSecurity,
+      certStatus
+    };
+  }
+  function normalizeLink(link) {
+    // Accept links as {source: id or object, target: id or object, value}
+    let source = link.source;
+    let target = link.target;
+    if (typeof source === 'object' && source !== null) source = source.id || source.name;
+    if (typeof target === 'object' && target !== null) target = target.id || target.name;
+    return {
+      ...link,
+      source,
+      target,
+      value: link.value || link.strength || 1
+    };
+  }
+  // Defensive: handle possible nesting (e.g., backendData.data.nodes)
+  let normalizedNodes = backendData.nodes || (backendData.data && backendData.data.nodes) || [];
+  let normalizedLinks = backendData.links || (backendData.data && backendData.data.links) || [];
+  normalizedNodes = normalizedNodes.map(normalizeNode);
+  normalizedLinks = normalizedLinks.map(normalizeLink);
+  // After normalization, convert link source/target from id to node object for D3
+  const nodeById = Object.fromEntries(normalizedNodes.map(n => [n.id, n]));
+  normalizedLinks = normalizedLinks.map(l => ({ ...l, source: nodeById[l.source] || l.source, target: nodeById[l.target] || l.target }));
+  window.data = { nodes: normalizedNodes, links: normalizedLinks };
 
   const svg = d3.select("#graph-container")
     .append("svg")
@@ -751,7 +797,7 @@ window.addEventListener('DOMContentLoaded', async function() {
       border-radius: 50%;
       margin-right: 4px;
     }
-    #bottom-key .node-bg-LLM { background: linear-gradient(135deg, #ffb3b3 0%, #ffd6d6 100%); }
+    #bottom-key .node-bg-LLM { background: linear-gradient(135deg, #ffb3b3 0%, #ff9999 100%); }
     #bottom-key .node-bg-Platform { background: linear-gradient(135deg, #aaffb3 0%, #d6ffe0 100%); }
     #bottom-key .node-bg-Image { background: linear-gradient(135deg, #7faaff 0%, #b3c6ff 100%); }
     #bottom-key .node-bg-Assessment { background: linear-gradient(135deg, #b3b3ff 0%, #e0e0ff 100%); }
