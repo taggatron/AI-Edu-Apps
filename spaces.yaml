@@ -1,0 +1,13 @@
+# This file configures your Hugging Face Space
+# For Node.js apps, this is optional if you have a README.md with metadata, but including it is best practice.
+
+title: AI Edu Apps
+sdk: nodejs
+app_file: backend/server.js
+python_version: null
+
+# Optional: customize Space settings
+# pinned: false
+# colorFrom: blue
+# colorTo: indigo
+# emoji: 📚
