@@ -248,20 +248,9 @@ window.addEventListener('DOMContentLoaded', async function() {
     .style("fill", "url(#glass-highlight-gradient)")
     .style("pointer-events", "none");
 
-  // Function to randomly assign certification status
-  function getRandomStatus() {
-    const statuses = ['✓', '✗', '?'];
-    return statuses[Math.floor(Math.random() * statuses.length)];
-  }
-
-  // Add status to each node
-  // SDC certified for Github Co-Pilot and Microsoft Co-Pilot
+  // Remove random assignment and set all to not certified
   window.data.nodes.forEach(node => {
-    if (node.id === 'Github Co-Pilot' || node.id === 'Microsoft Co-Pilot') {
-      node.certStatus = '✓';
-    } else {
-      node.certStatus = getRandomStatus();
-    }
+    node.certStatus = '✗';
   });
 
   // Add images and text to nodes
