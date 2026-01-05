@@ -22,6 +22,8 @@ The workflow at `.github/workflows/deploy-pages.yml` will deploy the site.
 
 - On GitHub Pages the app runs in **read-only mode**.
 - The **Admin** button is hidden because saving edits requires the local Node backend.
+- **Download CSV** exports the current app list.
+- **Upload CSV** replaces the app list for your browser (stored in `localStorage`).
 
 ## Local development
 

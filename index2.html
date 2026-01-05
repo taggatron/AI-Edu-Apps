@@ -15,6 +15,9 @@
         <button id="nodeViewBtn" class="control-button">Node View</button>
       </div>
       <div style="margin-right:32px;">
+        <button id="downloadCsvBtn" class="control-button">Download CSV</button>
+        <button id="uploadCsvBtn" class="control-button">Upload CSV</button>
+        <input id="uploadCsvInput" type="file" accept=".csv,text/csv" style="display:none;" />
         <button id="adminBtn" class="control-button">Admin</button>
       </div>
     </div>
@@ -138,6 +141,9 @@
 
     // Admin Modal Logic
     const adminBtn = document.getElementById('adminBtn');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const uploadCsvBtn = document.getElementById('uploadCsvBtn');
+    const uploadCsvInput = document.getElementById('uploadCsvInput');
     const adminModal = document.getElementById('admin-modal');
     const adminModalContent = document.getElementById('admin-modal-content');
     const adminModalClose = document.getElementById('admin-modal-close');
@@ -148,6 +154,39 @@
     // GitHub Pages (static hosting) runs in read-only mode (no backend persistence)
     if (window.__APP_READ_ONLY__ && adminBtn) {
       adminBtn.style.display = 'none';
+    }
+
+    // CSV import/export
+    if (downloadCsvBtn) {
+      downloadCsvBtn.addEventListener('click', function() {
+        if (typeof window.exportAppsCsv === 'function') {
+          window.exportAppsCsv();
+        } else {
+          alert('CSV export is not available yet.');
+        }
+      });
+    }
+    if (uploadCsvBtn && uploadCsvInput) {
+      uploadCsvBtn.addEventListener('click', function() {
+        uploadCsvInput.value = '';
+        uploadCsvInput.click();
+      });
+      uploadCsvInput.addEventListener('change', async function() {
+        const file = uploadCsvInput.files && uploadCsvInput.files[0];
+        if (!file) return;
+        try {
+          if (typeof window.importAppsCsvFile !== 'function') {
+            alert('CSV import is not available yet.');
+            return;
+          }
+          await window.importAppsCsvFile(file);
+          alert('CSV imported. Reloading with the uploaded data.');
+          window.location.reload();
+        } catch (err) {
+          alert(err && err.message ? err.message : 'Failed to import CSV.');
+          console.warn(err);
+        }
+      });
     }
 
     // Populate app select dropdown
