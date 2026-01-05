@@ -10,15 +10,55 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
+:root {
+  --bg-start: #f5f7fa;
+  --bg-end: #c3cfe2;
+  --surface: rgba(255,255,255,0.92);
+  --surface-strong: rgba(255,255,255,0.98);
+  --border: #e0e7ff;
+  --text: #111827;
+  --text-muted: #4b5563;
+  --brand: #6366f1;
+  --brand-hover: #818cf8;
+  --shadow-sm: 0 2px 8px rgba(60,60,100,0.06);
+  --shadow-md: 0 8px 32px rgba(60,60,100,0.14);
+}
+
 html, body {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Inter', Arial, sans-serif;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  color: #222;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  color: var(--text);
   overflow: hidden;
+}
+
+/* Top bar */
+.admin-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid rgba(224,231,255,0.9);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+}
+
+.admin-bar-left,
+.admin-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 #graph-container {
@@ -31,16 +71,18 @@ html, body {
 
 #controls {
   position: fixed;
-  top: 24px;
-  left: 24px;
+  top: 72px;
+  left: 18px;
   z-index: 100;
-  background: rgba(255,255,255,0.95);
-  padding: 20px 18px 18px 18px;
+  background: var(--surface-strong);
+  padding: 16px 16px 14px 16px;
   border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(60,60,100,0.13);
+  box-shadow: var(--shadow-md);
   display: none;
   min-width: 260px;
   transition: box-shadow 0.2s;
+  border: 1px solid rgba(224,231,255,0.9);
+  backdrop-filter: blur(12px);
 }
 
 #controls:focus-within, #controls:hover {
@@ -57,22 +99,52 @@ html, body {
 }
 
 .control-button {
-  padding: 10px 20px;
-  background: #6366f1;
+  padding: 10px 14px;
+  background: var(--brand);
   color: #fff;
-  border: 1px solid #6366f1;
-  border-radius: 6px;
+  border: 1px solid var(--brand);
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
   transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(60,60,100,0.06);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
 }
 
 .control-button:hover, .control-button:focus {
-  background: #818cf8;
+  background: var(--brand-hover);
   color: #fff;
   box-shadow: 0 4px 16px rgba(60,60,100,0.10);
+}
+
+.controls-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--brand);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.feature-categories {
+  margin-bottom: 12px;
+}
+
+.feature-categories label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.98rem;
+  color: var(--text);
+}
+
+.feature-categories input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand);
 }
 
 #search {
@@ -125,7 +197,7 @@ html, body {
 .tooltip {
   position: absolute;
   padding: 12px 16px;
-  background: rgba(255,255,255,0.98);
+  background: var(--surface-strong);
   border: 1.5px solid #d1d5db;
   border-radius: 8px;
   pointer-events: none;
@@ -235,9 +307,25 @@ html, body {
 
 .app-description {
   font-size: 1.05rem;
-  color: #444;
+  color: var(--text-muted);
   margin-bottom: 0.7rem;
   line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+  .admin-bar {
+    padding: 10px 12px;
+  }
+  #controls {
+    left: 12px;
+    right: 12px;
+    min-width: auto;
+  }
+  .control-button {
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
 }
 
 .features-section,

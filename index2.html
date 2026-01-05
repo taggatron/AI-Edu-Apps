@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>AI Education Tools Graph</title>
+  <link rel="icon" href="data:,">
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <div class="admin-bar" style="position:fixed;top:0;left:0;width:100vw;z-index:200;background:#f3f4f6;padding:8px 0 6px 0;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(60,60,100,0.07);">
-      <div style="margin-left:32px;display:flex;gap:12px;">
+    <div class="admin-bar">
+      <div class="admin-bar-left">
         <button id="toggleControls" class="control-button">🔍 Search by Feature</button>
         <button id="organizeQuadrants" class="control-button">Agentic Systems</button>
-        <button id="nodeViewBtn" class="control-button">Node View</button>
       </div>
-      <div style="margin-right:32px;">
+      <div class="admin-bar-right">
         <button id="downloadCsvBtn" class="control-button">Download CSV</button>
         <button id="uploadCsvBtn" class="control-button">Upload CSV</button>
         <input id="uploadCsvInput" type="file" accept=".csv,text/csv" style="display:none;" />
@@ -22,10 +22,10 @@
       </div>
     </div>
   <div id="controls" style="display:none;">
-    <div class="controls-title" style="font-weight:600;font-size:1.08rem;color:#6366f1;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+    <div class="controls-title">
       <span role="img" aria-label="Search">🔍</span> Search for App Feature
     </div>
-    <div id="feature-categories" style="margin-bottom:12px;"></div>
+    <div id="feature-categories" class="feature-categories"></div>
     <div id="legend">
       <div class="legend-item"><span class="dot image"></span>Image Creation</div>
       <div class="legend-item"><span class="dot llm"></span>LLM</div>
@@ -33,7 +33,7 @@
       <div class="legend-item"><span class="dot assessment"></span>Assessment</div>
     </div>
   </div>
-  <div id="graph-container" style="display:none;"></div>
+  <div id="graph-container"></div>
   <div id="info-panel" class="info-panel">
     <div class="info-header">
       <h2 class="app-title"></h2>
@@ -118,7 +118,9 @@
             }
             if (window.links && window.links.style) {
               window.links.style('display', function(d) {
-                return (matchingIds.includes(d.source.id) && matchingIds.includes(d.target.id)) ? '' : 'none';
+                const sourceId = (d.source && d.source.id) ? d.source.id : d.source;
+                const targetId = (d.target && d.target.id) ? d.target.id : d.target;
+                return (matchingIds.includes(sourceId) && matchingIds.includes(targetId)) ? '' : 'none';
               });
             }
           });
@@ -278,20 +280,6 @@
       window.location.reload();
     };
 
-    // --- Node View Logic ---
-    window.addEventListener('DOMContentLoaded', function() {
-      // Hide graph, show grid by default
-      document.getElementById('graph-container').style.display = 'none';
-      var appGrid = document.getElementById('app-grid');
-      if (appGrid) appGrid.style.display = 'grid';
-      // Node View button logic
-      var nodeViewBtn = document.getElementById('nodeViewBtn');
-      nodeViewBtn.addEventListener('click', function() {
-        document.getElementById('graph-container').style.display = '';
-        var appGrid = document.getElementById('app-grid');
-        if (appGrid) appGrid.style.display = 'none';
-      });
-    });
   </script>
 </body>
 </html>
