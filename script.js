@@ -1,28 +1,239 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-// --- Backend API URL ---
-const API_URL = "http://localhost:3001/api";
+// --- Data source configuration ---
+// GitHub Pages is static hosting, so there is no Node/Express backend.
+// Locally (localhost), we keep using the backend on :3001.
+const IS_LOCALHOST = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const IS_GITHUB_PAGES = window.location.hostname.endsWith('github.io');
+const LOCAL_DEV_API_URL = "http://localhost:3001/api";
+const SAME_ORIGIN_API_URL = new URL('/api', window.location.href).toString().replace(/\/$/, '');
 
-// --- Load data from backend ---
-async function fetchData() {
-  const res = await fetch(`${API_URL}/data`);
+// Use local dev backend on localhost; use same-origin backend on other hosts.
+// On GitHub Pages, force static mode.
+const API_URL = IS_LOCALHOST ? LOCAL_DEV_API_URL : (IS_GITHUB_PAGES ? null : SAME_ORIGIN_API_URL);
+const STATIC_DATA_URL = new URL('backend/data.json', window.location.href).toString();
+
+const NODES_OVERRIDE_STORAGE_KEY = 'aiEduApps.nodesOverride.v1';
+
+// Expose a simple flag so inline scripts can react (e.g., disable Admin on Pages)
+window.__APP_READ_ONLY__ = !API_URL;
+
+async function fetchJson(url) {
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
+  }
   return await res.json();
 }
 
-// --- Save node to backend ---
+function loadNodesOverrideFromStorage() {
+  try {
+    const raw = window.localStorage.getItem(NODES_OVERRIDE_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveNodesOverrideToStorage(nodes) {
+  window.localStorage.setItem(NODES_OVERRIDE_STORAGE_KEY, JSON.stringify(nodes));
+}
+
+function escapeCsvValue(value) {
+  const str = String(value ?? '');
+  if (/[",\n\r]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function toCsv(rows, headers) {
+  const lines = [];
+  lines.push(headers.map(escapeCsvValue).join(','));
+  for (const row of rows) {
+    lines.push(headers.map(h => escapeCsvValue(row[h])).join(','));
+  }
+  return lines.join('\n');
+}
+
+function parseCsv(text) {
+  // Minimal RFC4180-ish CSV parser: handles quotes, commas, CRLF/LF.
+  const rows = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
+    if (inQuotes) {
+      if (c === '"') {
+        const next = text[i + 1];
+        if (next === '"') {
+          field += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        field += c;
+      }
+      continue;
+    }
+
+    if (c === '"') {
+      inQuotes = true;
+      continue;
+    }
+    if (c === ',') {
+      row.push(field);
+      field = '';
+      continue;
+    }
+    if (c === '\n') {
+      row.push(field);
+      field = '';
+      if (row.length > 1 || row[0] !== '') rows.push(row);
+      row = [];
+      continue;
+    }
+    if (c === '\r') {
+      // ignore; handled by \n
+      continue;
+    }
+
+    field += c;
+  }
+
+  // Flush last field
+  row.push(field);
+  if (row.length > 1 || row[0] !== '') rows.push(row);
+  return rows;
+}
+
+function downloadTextFile(filename, content, contentType = 'text/plain;charset=utf-8') {
+  const blob = new Blob([content], { type: contentType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function normalizeUploadedNode(raw) {
+  const featuresRaw = raw.features ?? '';
+  const features = String(featuresRaw)
+    .split(';')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  return {
+    id: (raw.id ?? '').trim(),
+    group: (raw.group ?? '').trim(),
+    description: raw.description ?? '',
+    features,
+    gdpr: raw.gdpr ?? '',
+    ukHosted: raw.ukHosted ?? '',
+    ipSecurity: raw.ipSecurity ?? '',
+    certStatus: raw.certStatus ?? ''
+  };
+}
+
+// Exposed helpers for the UI (index2.html)
+window.exportAppsCsv = function exportAppsCsv() {
+  const nodes = (window.data && Array.isArray(window.data.nodes)) ? window.data.nodes : [];
+  const headers = ['id', 'group', 'description', 'features', 'gdpr', 'ukHosted', 'ipSecurity', 'certStatus'];
+  const rows = nodes.map(n => ({
+    id: n.id ?? '',
+    group: n.group ?? '',
+    description: n.description ?? '',
+    features: Array.isArray(n.features) ? n.features.join('; ') : (n.features ?? ''),
+    gdpr: n.gdpr ?? '',
+    ukHosted: n.ukHosted ?? '',
+    ipSecurity: n.ipSecurity ?? '',
+    certStatus: n.certStatus ?? ''
+  }));
+  const csv = toCsv(rows, headers);
+  downloadTextFile('ai-edu-apps.csv', csv, 'text/csv;charset=utf-8');
+};
+
+window.importAppsCsvFile = async function importAppsCsvFile(file) {
+  const text = await file.text();
+  const rows = parseCsv(text);
+  if (rows.length < 2) {
+    throw new Error('CSV must include a header row and at least one data row.');
+  }
+
+  const headers = rows[0].map(h => h.trim());
+  const headerSet = new Set(headers);
+  if (!headerSet.has('id')) {
+    throw new Error('CSV must include an "id" column.');
+  }
+
+  const parsed = [];
+  for (let i = 1; i < rows.length; i++) {
+    const cols = rows[i];
+    const obj = {};
+    headers.forEach((h, idx) => {
+      obj[h] = (cols[idx] ?? '').trim();
+    });
+    const node = normalizeUploadedNode(obj);
+    if (!node.id) continue;
+    parsed.push(node);
+  }
+
+  if (parsed.length === 0) {
+    throw new Error('No valid rows found (need at least one row with a non-empty id).');
+  }
+
+  saveNodesOverrideToStorage(parsed);
+};
+
+// --- Load data (backend if available, otherwise static JSON) ---
+async function fetchData() {
+  if (API_URL) {
+    try {
+      return await fetchJson(`${API_URL}/data`);
+    } catch (e) {
+      // If the backend isn't running locally, fall back to static JSON.
+      console.warn('Backend unavailable; falling back to static data.json', e);
+    }
+  }
+  return await fetchJson(STATIC_DATA_URL);
+}
+
+// --- Save node (only works when backend is available) ---
 async function saveNodeToBackend(node) {
-  await fetch(`${API_URL}/node/${encodeURIComponent(node.id)}`, {
+  if (!API_URL) {
+    // On GitHub Pages (and other static hosts), we can't persist edits.
+    throw new Error('Read-only mode: no backend available to persist changes.');
+  }
+  const res = await fetch(`${API_URL}/node/${encodeURIComponent(node.id)}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(node)
   });
+  if (!res.ok) {
+    throw new Error(`Failed to save: ${res.status} ${res.statusText}`);
+  }
 }
 
 // --- Main entry point ---
 window.addEventListener('DOMContentLoaded', async function() {
   // Fetch data from backend
   const backendData = await fetchData();
+
+  // If the user uploaded a CSV previously, prefer it (works on GitHub Pages)
+  const nodesOverride = loadNodesOverrideFromStorage();
+  if (nodesOverride) {
+    backendData.nodes = nodesOverride;
+  }
 
   // --- Data Normalization for Flexible Backend Format ---
   function normalizeNode(node) {
