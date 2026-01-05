@@ -282,6 +282,17 @@ window.addEventListener('DOMContentLoaded', async function() {
   normalizedLinks = normalizedLinks.map(l => ({ ...l, source: nodeById[l.source] || l.source, target: nodeById[l.target] || l.target }));
   window.data = { nodes: normalizedNodes, links: normalizedLinks };
 
+  // Keep Card View content from overlapping the fixed top bar
+  try {
+    const adminBar = document.querySelector('.admin-bar');
+    if (adminBar) {
+      const h = Math.ceil(adminBar.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--topbar-offset', `${h}px`);
+    }
+  } catch {
+    // ignore
+  }
+
   const svg = d3.select("#graph-container")
     .append("svg")
     .attr("width", width)
@@ -416,6 +427,53 @@ window.addEventListener('DOMContentLoaded', async function() {
   window.nodes = nodes;
   window.links = links;
 
+  // Shared maps (used by graph nodes, info panel, and card view)
+  const logoMap = {
+    'Turnitin': 'logos/turnitin-logo.svg',
+    'Midjourney': 'logos/midjourney.svg',
+    'ChatGPT': 'logos/openai.svg',
+    'DALL-E': 'logos/dalle-color.svg',
+    'Claude': 'logos/claude-color.svg',
+    'Anthropic': 'logos/anthropic.svg',
+    'DeepSeek': 'logos/deepseek-color.svg',
+    'SUNO': 'logos/suno.svg',
+    'Stable Diffusion': 'logos/stability-color.svg',
+    'Notion': 'logos/notion.svg',
+    'Perplexity AI': 'logos/perplexity-color.svg',
+    'Speechify': 'logos/speechify logo.svg',
+    'Century': 'logos/century-tech-logo.png',
+    'Third Space Learning': 'logos/notebooklm.svg',
+    'Gradescope': 'logos/githubcopilot.svg',
+    'Teachermatic': 'logos/Teachermatic_logo.png',
+    'Runway ML': 'logos/runway.svg',
+    'Canva': 'logos/Canva App Logo.svg',
+    'Github Co-Pilot': 'logos/githubcopilot.svg',
+    'Microsoft Co-Pilot': 'logos/copilot-color.svg'
+  };
+
+  const webMap = {
+    'Turnitin': 'https://www.turnitin.com/',
+    'Midjourney': 'https://www.midjourney.com/',
+    'ChatGPT': 'https://chat.openai.com/',
+    'DALL-E': 'https://openai.com/dall-e/',
+    'Claude': 'https://claude.ai/',
+    'Anthropic': 'https://www.anthropic.com/',
+    'DeepSeek': 'https://deepseek.com/',
+    'SUNO': 'https://suno.ai/',
+    'Stable Diffusion': 'https://stability.ai/',
+    'Notion': 'https://www.notion.so/',
+    'Perplexity AI': 'https://www.perplexity.ai/',
+    'Speechify': 'https://speechify.com/',
+    'Century': 'https://www.century.tech/',
+    'Third Space Learning': 'https://thirdspacelearning.com/',
+    'Gradescope': 'https://www.gradescope.com/',
+    'Teachermatic': 'https://teachermatic.com/',
+    'Runway ML': 'https://runwayml.com/',
+    'Canva': 'https://www.canva.com/',
+    'Github Co-Pilot': 'https://github.com/features/copilot',
+    'Microsoft Co-Pilot': 'https://copilot.microsoft.com/'
+  };
+
   // Function to randomly assign initial scale
   function getRandomScale() {
     return Math.random() * 0.5 + 0.75; // Scale between 0.75 and 1.25
@@ -509,28 +567,6 @@ window.addEventListener('DOMContentLoaded', async function() {
       .attr("height", bbox.height + 10);
 
     // Add image/logo inside the node
-    const logoMap = {
-      'Turnitin': 'logos/turnitin-logo.svg',
-      'Midjourney': 'logos/midjourney.svg',
-      'ChatGPT': 'logos/openai.svg',
-      'DALL-E': 'logos/dalle-color.svg',
-      'Claude': 'logos/claude-color.svg',
-      'Anthropic': 'logos/anthropic.svg',
-      'DeepSeek': 'logos/deepseek-color.svg',
-      'SUNO': 'logos/suno.svg',
-      'Stable Diffusion': 'logos/stability-color.svg',
-      'Notion': 'logos/notion.svg',
-      'Perplexity AI': 'logos/perplexity-color.svg',
-      'Speechify': 'logos/speechify logo.svg',
-      'Century': 'logos/century-tech-logo.png', // Use correct Century logo
-      'Third Space Learning': 'logos/notebooklm.svg',
-      'Gradescope': 'logos/githubcopilot.svg',
-      'Teachermatic': 'logos/Teachermatic_logo.png',
-      'Runway ML': 'logos/runway.svg',
-      'Canva': 'logos/Canva App Logo.svg',
-      'Github Co-Pilot': 'logos/githubcopilot.svg',
-      'Microsoft Co-Pilot': 'logos/copilot-color.svg'
-    };
     const logo = logoMap[d.id];
     if (logo) {
       g.append("image")
@@ -591,39 +627,13 @@ window.addEventListener('DOMContentLoaded', async function() {
     infoPanel.node().style.animation = 'fadeInPanel 0.4s cubic-bezier(.4,0,.2,1)';
   }
 
-  // Update info panel show logic
-  nodes.on("click", (event, d) => {
-    event.stopPropagation();
-
+  function renderNodeInfo(d) {
     // Get the color based on group
     const categoryColor = d.group === "LLM" ? "#ff9999" :
                          d.group === "Platform" ? "#99ff99" :
                          d.group === "Image" ? "#2196F3" :
                          "#9999ff";
 
-    // --- Add logo to info panel title row ---
-    const logoMap = {
-      'Turnitin': 'logos/turnitin-logo.svg',
-      'Midjourney': 'logos/midjourney.svg',
-      'ChatGPT': 'logos/openai.svg',
-      'DALL-E': 'logos/dalle-color.svg',
-      'Claude': 'logos/claude-color.svg',
-      'Anthropic': 'logos/anthropic.svg',
-      'DeepSeek': 'logos/deepseek-color.svg',
-      'SUNO': 'logos/suno.svg',
-      'Stable Diffusion': 'logos/stability-color.svg',
-      'Notion': 'logos/notion.svg',
-      'Perplexity AI': 'logos/perplexity-color.svg',
-      'Speechify': 'logos/speechify logo.svg',
-      'Century': 'logos/century-tech-logo.png',
-      'Third Space Learning': 'logos/notebooklm.svg',
-      'Gradescope': 'logos/githubcopilot.svg',
-      'Teachermatic': 'logos/Teachermatic_logo.png',
-      'Runway ML': 'logos/runway.svg',
-      'Canva': 'logos/Canva App Logo.svg',
-      'Github Co-Pilot': 'logos/githubcopilot.svg',
-      'Microsoft Co-Pilot': 'logos/copilot-color.svg'
-    };
     const logo = logoMap[d.id];
     // Remove any previous logo
     d3.select('.info-panel .info-logo').remove();
@@ -644,29 +654,6 @@ window.addEventListener('DOMContentLoaded', async function() {
         .style('background', '#fff');
     }
 
-    // --- Make app title clickable to open web address ---
-    const webMap = {
-      'Turnitin': 'https://www.turnitin.com/',
-      'Midjourney': 'https://www.midjourney.com/',
-      'ChatGPT': 'https://chat.openai.com/',
-      'DALL-E': 'https://openai.com/dall-e/',
-      'Claude': 'https://claude.ai/',
-      'Anthropic': 'https://www.anthropic.com/',
-      'DeepSeek': 'https://deepseek.com/',
-      'SUNO': 'https://suno.ai/',
-      'Stable Diffusion': 'https://stability.ai/',
-      'Notion': 'https://www.notion.so/',
-      'Perplexity AI': 'https://www.perplexity.ai/',
-      'Speechify': 'https://speechify.com/',
-      'Century': 'https://www.century.tech/',
-      'Third Space Learning': 'https://thirdspacelearning.com/',
-      'Gradescope': 'https://www.gradescope.com/',
-      'Teachermatic': 'https://teachermatic.com/',
-      'Runway ML': 'https://runwayml.com/',
-      'Canva': 'https://www.canva.com/',
-      'Github Co-Pilot': 'https://github.com/features/copilot',
-      'Microsoft Co-Pilot': 'https://copilot.microsoft.com/'
-    };
     const appTitle = infoPanel.select(".app-title");
     appTitle.text(d.id)
       .style("cursor", webMap[d.id] ? "pointer" : "default")
@@ -690,9 +677,6 @@ window.addEventListener('DOMContentLoaded', async function() {
           .style("text-decoration", "");
       });
 
-    // Remove any previous info-web (if present)
-    d3.select('.info-panel .info-web').remove();
-
     // Update info panel content
     infoPanel
       .style("display", "block")
@@ -703,17 +687,15 @@ window.addEventListener('DOMContentLoaded', async function() {
       .select(".app-category")
       .text(d.group)
       .style("background-color", categoryColor)
-      .style("color", "white");  // Make text white for better contrast
+      .style("color", "white");
 
     // --- SDC Certification Status ---
     const certDiv = document.querySelector('.info-panel .sdc-cert-status');
     if (certDiv) {
-      // Remove animation classes if present
       certDiv.classList.remove('certified-animate', 'not-certified-animate');
       if (d.certStatus === '✓') {
         certDiv.innerHTML = '<span class="cert-bracket">[</span><span class="cert-check">✓</span><span class="cert-bracket">]</span> SDC certified';
         certDiv.className = 'sdc-cert-status certified';
-        // Add animation class for 5 seconds
         setTimeout(() => certDiv.classList.remove('certified-animate'), 5000);
         certDiv.classList.add('certified-animate');
       } else if (d.certStatus === '✗') {
@@ -733,7 +715,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 
     // Update features
     const features = infoPanel.select(".features-container");
-    features.html(""); // Clear existing content
+    features.html("");
     features
       .selectAll(".feature-badge")
       .data(d.features || [])
@@ -744,7 +726,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 
     // Update security badges
     const security = infoPanel.select(".security-container");
-    security.html(""); // Clear existing content
+    security.html("");
     security
       .selectAll(".security-badge")
       .data([
@@ -758,12 +740,12 @@ window.addEventListener('DOMContentLoaded', async function() {
       .text(d => d);
 
     // Calculate and update similarity score based on connected nodes
-    const connections = window.data.links.filter(link => 
+    const connections = window.data.links.filter(link =>
       link.source.id === d.id || link.target.id === d.id
     );
-    const avgStrength = connections.reduce((acc, curr) => acc + curr.value, 0) / 
+    const avgStrength = connections.reduce((acc, curr) => acc + curr.value, 0) /
       Math.max(1, connections.length);
-    
+
     infoPanel
       .select(".similarity-bar")
       .style("width", '0%')
@@ -772,12 +754,163 @@ window.addEventListener('DOMContentLoaded', async function() {
       .style("width", `${avgStrength * 100}%`);
 
     showInfoPanel();
+  }
+
+  // Update info panel show logic
+  nodes.on("click", (event, d) => {
+    event.stopPropagation();
+    renderNodeInfo(d);
   });
 
   // Close info panel when clicking outside
   svg.on("click", () => {
     infoPanel.style("display", "none");
   });
+
+  // --- Card View ---
+  const graphContainerEl = document.getElementById('graph-container');
+  const cardContainerEl = document.getElementById('card-container');
+  const toggleCardViewBtn = document.getElementById('toggleCardView');
+  const tooltipEl = document.getElementById('tooltip');
+  let isCardView = false;
+  let activeCardFilterIds = null; // Set<string> | null
+
+  function certClass(certStatus) {
+    if (certStatus === '✓') return 'certified';
+    if (certStatus === '✗') return 'not-certified';
+    return 'unknown';
+  }
+
+  function getVisibleNodesForCards() {
+    if (!activeCardFilterIds) return window.data.nodes;
+    return window.data.nodes.filter(n => activeCardFilterIds.has(n.id));
+  }
+
+  function renderCards() {
+    if (!cardContainerEl) return;
+    const visible = getVisibleNodesForCards();
+
+    if (visible.length === 0) {
+      cardContainerEl.innerHTML = '<div class="card-empty">No apps match the selected feature categories.</div>';
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'card-grid';
+
+    for (const n of visible) {
+      const card = document.createElement('div');
+      card.className = 'app-card';
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `Open details for ${n.id}`);
+
+      const header = document.createElement('div');
+      header.className = 'app-card-header';
+
+      const logoSrc = logoMap[n.id];
+      const logo = document.createElement('img');
+      logo.className = 'app-card-logo';
+      logo.alt = logoSrc ? `${n.id} logo` : '';
+      logo.src = logoSrc || 'data:,';
+      header.appendChild(logo);
+
+      const title = document.createElement('div');
+      title.className = 'app-card-title';
+
+      const name = document.createElement('div');
+      name.className = 'app-card-name';
+      name.textContent = n.id;
+      title.appendChild(name);
+
+      const meta = document.createElement('div');
+      meta.className = 'app-card-meta';
+
+      const groupBadge = document.createElement('span');
+      groupBadge.className = 'app-card-badge';
+      groupBadge.textContent = n.group || '';
+      meta.appendChild(groupBadge);
+
+      const certBadge = document.createElement('span');
+      certBadge.className = `app-card-badge ${certClass(n.certStatus)}`;
+      certBadge.textContent = n.certStatus || '?';
+      meta.appendChild(certBadge);
+
+      title.appendChild(meta);
+      header.appendChild(title);
+      card.appendChild(header);
+
+      const desc = document.createElement('p');
+      desc.className = 'app-card-desc';
+      desc.textContent = n.description || '';
+      card.appendChild(desc);
+
+      const features = document.createElement('div');
+      features.className = 'app-card-features';
+      const list = Array.isArray(n.features) ? n.features : [];
+      for (const f of list) {
+        const chip = document.createElement('span');
+        chip.className = 'app-chip';
+        chip.textContent = f;
+        features.appendChild(chip);
+      }
+      card.appendChild(features);
+
+      function open() {
+        renderNodeInfo(n);
+      }
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        open();
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open();
+        }
+      });
+
+      grid.appendChild(card);
+    }
+
+    cardContainerEl.innerHTML = '';
+    cardContainerEl.appendChild(grid);
+  }
+
+  window.__setCardFilterIds = function setCardFilterIds(ids) {
+    if (!ids) {
+      activeCardFilterIds = null;
+    } else {
+      activeCardFilterIds = new Set(ids);
+    }
+    renderCards();
+  };
+
+  function setCardView(on) {
+    isCardView = !!on;
+    if (toggleCardViewBtn) {
+      toggleCardViewBtn.classList.toggle('active', isCardView);
+    }
+    if (graphContainerEl) {
+      graphContainerEl.style.display = isCardView ? 'none' : '';
+    }
+    if (cardContainerEl) {
+      cardContainerEl.style.display = isCardView ? 'block' : 'none';
+    }
+    if (tooltipEl) {
+      tooltipEl.style.display = isCardView ? 'none' : '';
+    }
+    if (isCardView) {
+      renderCards();
+    }
+  }
+
+  if (toggleCardViewBtn) {
+    toggleCardViewBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setCardView(!isCardView);
+    });
+  }
 
   // Accessibility: allow keyboard navigation for legend and controls
   const legendItems = document.querySelectorAll('.legend-item');

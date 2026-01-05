@@ -13,6 +13,7 @@
       <div class="admin-bar-left">
         <button id="toggleControls" class="control-button">🔍 Search by Feature</button>
         <button id="organizeQuadrants" class="control-button">Agentic Systems</button>
+        <button id="toggleCardView" class="control-button">Card View</button>
       </div>
       <div class="admin-bar-right">
         <button id="downloadCsvBtn" class="control-button">Download CSV</button>
@@ -34,6 +35,7 @@
     </div>
   </div>
   <div id="graph-container"></div>
+  <div id="card-container" class="card-container" style="display:none;"></div>
   <div id="info-panel" class="info-panel">
     <div class="info-header">
       <h2 class="app-title"></h2>
@@ -107,10 +109,12 @@
             if (checked.length === 0) {
               if (window.nodes && window.nodes.style) window.nodes.style('display', '');
               if (window.links && window.links.style) window.links.style('display', '');
+              if (typeof window.__setCardFilterIds === 'function') window.__setCardFilterIds(null);
               return;
             }
             const selectedFeatures = featureCategories.filter(cat => checked.includes(cat.name)).flatMap(cat => cat.features);
             const matchingIds = (window.data && window.data.nodes) ? window.data.nodes.filter(n => n.features.some(f => selectedFeatures.includes(f))).map(n => n.id) : [];
+            if (typeof window.__setCardFilterIds === 'function') window.__setCardFilterIds(matchingIds);
             if (window.nodes && window.nodes.each) {
               window.nodes.each(function(d) {
                 d3.select(this).style('display', matchingIds.includes(d.id) ? '' : 'none');
