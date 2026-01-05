@@ -801,6 +801,10 @@ window.addEventListener('DOMContentLoaded', async function() {
     for (const n of visible) {
       const card = document.createElement('div');
       card.className = 'app-card';
+      if (n.group) {
+        const groupClass = String(n.group).trim().replace(/\s+/g, '-');
+        card.classList.add(`app-card--${groupClass}`);
+      }
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
       card.setAttribute('aria-label', `Open details for ${n.id}`);
@@ -911,6 +915,9 @@ window.addEventListener('DOMContentLoaded', async function() {
       setCardView(!isCardView);
     });
   }
+
+  // Default to Card View
+  setCardView(true);
 
   // Accessibility: allow keyboard navigation for legend and controls
   const legendItems = document.querySelectorAll('.legend-item');

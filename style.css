@@ -95,6 +95,23 @@ html, body {
   transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 }
 
+/* Category-tinted card backgrounds (match key colors) */
+.app-card--LLM {
+  background: linear-gradient(135deg, #ffb3b3 0%, #ffd6d6 100%);
+}
+
+.app-card--Platform {
+  background: linear-gradient(135deg, #aaffb3 0%, #d6ffe0 100%);
+}
+
+.app-card--Image {
+  background: linear-gradient(135deg, #7faaff 0%, #b3c6ff 100%);
+}
+
+.app-card--Assessment {
+  background: linear-gradient(135deg, #b3b3ff 0%, #e0e0ff 100%);
+}
+
 .app-card:hover,
 .app-card:focus {
   outline: none;
