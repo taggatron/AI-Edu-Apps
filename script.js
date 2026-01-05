@@ -1,22 +1,51 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-// --- Backend API URL ---
-const API_URL = "http://localhost:3001/api";
+// --- Data source configuration ---
+// GitHub Pages is static hosting, so there is no Node/Express backend.
+// Locally (localhost), we keep using the backend on :3001.
+const IS_LOCALHOST = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const API_URL = IS_LOCALHOST ? "http://localhost:3001/api" : null;
+const STATIC_DATA_URL = new URL('backend/data.json', window.location.href).toString();
 
-// --- Load data from backend ---
-async function fetchData() {
-  const res = await fetch(`${API_URL}/data`);
+// Expose a simple flag so inline scripts can react (e.g., disable Admin on Pages)
+window.__APP_READ_ONLY__ = !API_URL;
+
+async function fetchJson(url) {
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
+  }
   return await res.json();
 }
 
-// --- Save node to backend ---
+// --- Load data (backend if available, otherwise static JSON) ---
+async function fetchData() {
+  if (API_URL) {
+    try {
+      return await fetchJson(`${API_URL}/data`);
+    } catch (e) {
+      // If the backend isn't running locally, fall back to static JSON.
+      console.warn('Backend unavailable; falling back to static data.json', e);
+    }
+  }
+  return await fetchJson(STATIC_DATA_URL);
+}
+
+// --- Save node (only works when backend is available) ---
 async function saveNodeToBackend(node) {
-  await fetch(`${API_URL}/node/${encodeURIComponent(node.id)}`, {
+  if (!API_URL) {
+    // On GitHub Pages (and other static hosts), we can't persist edits.
+    throw new Error('Read-only mode: no backend available to persist changes.');
+  }
+  const res = await fetch(`${API_URL}/node/${encodeURIComponent(node.id)}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(node)
   });
+  if (!res.ok) {
+    throw new Error(`Failed to save: ${res.status} ${res.statusText}`);
+  }
 }
 
 // --- Main entry point ---

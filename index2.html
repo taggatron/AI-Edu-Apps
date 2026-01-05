@@ -145,6 +145,11 @@
     const adminAppForm = document.getElementById('admin-app-form');
     const adminSaveBtn = document.getElementById('admin-save-btn');
 
+    // GitHub Pages (static hosting) runs in read-only mode (no backend persistence)
+    if (window.__APP_READ_ONLY__ && adminBtn) {
+      adminBtn.style.display = 'none';
+    }
+
     // Populate app select dropdown
     function populateAdminAppSelect() {
       adminAppSelect.innerHTML = window.data.nodes.map(n => `<option value="${n.id}">${n.id}</option>`).join('');
@@ -223,7 +228,13 @@
       adminModal.style.display = 'none';
       // Persist to backend
       if (typeof saveNodeToBackend === 'function') {
-        await saveNodeToBackend(node);
+        try {
+          await saveNodeToBackend(node);
+        } catch (err) {
+          alert('Admin edits are disabled on GitHub Pages (read-only mode). Run locally to save changes.');
+          console.warn(err);
+          return;
+        }
       }
       window.location.reload();
     };
